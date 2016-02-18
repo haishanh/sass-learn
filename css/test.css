@@ -1,0 +1,61 @@
+/*
+ * Nested Properties
+ */
+.funky {
+  font-family: Monaco;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+/*
+ * Maps
+ */
+/*
+ *  == OPERATIONS ==
+ */
+/*
+ * Division and /
+ */
+division-not-happen {
+  font: 10px/8px;
+}
+
+division-happen {
+  width: 500px;
+  line-height: 1em;
+  height: 250px;
+  marigin-left: 9px;
+}
+
+/*
+ * String operations
+ */
+p {
+  cusor: e-resize;
+}
+
+/*
+ * Interpolation: # { }
+ */
+p:before {
+  content: "I ate 15 pies!";
+}
+
+p.foo {
+  border-color: blue;
+}
+
+x {
+  what-you-want: 12px / 30px;
+  not-what-you-want: 0.4;
+}
+
+/*
+ * import
+ */
+/*
+ * FILE <_part.scss>
+ */
+/*
+ * Nested import
+ */
