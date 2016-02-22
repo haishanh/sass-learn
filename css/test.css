@@ -28,28 +28,104 @@ division-happen {
 }
 
 /*
- * String operations
+ * - Color Operations -
+ */
+/*
+ * r,g,b calc seperately
+ */
+color-add {
+  color: #050709;
+}
+
+color-multiply {
+  color: #020406;
+}
+
+/*
+ * colors with alpha channel, must have the same alpha value in order for color arithmetic to be done with theme
+ */
+color-with-alpha {
+  color: rgba(255, 255, 0, 0.75);
+}
+
+/*
+ * alpha channel if a color can be adjusted using color function: opacify() and transparentize()
+ */
+p {
+  color: rgba(255, 0, 0, 0.8);
+  background-color: rgba(255, 0, 0, 0.25);
+}
+
+/*
+ * - String operations -
  */
 p {
   cusor: e-resize;
 }
 
 /*
- * Interpolation: # { }
+ * quoted or unquoted depends on the value on the left of "+"
+ */
+quoted-unquoted {
+  content: "Foo Bar";
+  font-family: sans-serif;
+}
+
+/*
+ * Interpolation within the string: # { }
  */
 p:before {
   content: "I ate 15 pies!";
 }
 
+/*
+ * == Parentheses ==
+ */
+/*
+ * affect the order of operations
+ */
+p {
+  width: 7em;
+}
+
+/*
+ * == Functions ==
+ */
+color-function {
+  color: red;
+}
+
+/*
+ * keyword arguments
+ */
+function-kw-arg {
+  color: red;
+}
+
+/*
+ * == Interpolation: # { } ==
+ */
+/* used in property name */
 p.foo {
   border-color: blue;
 }
 
+/* used in property value */
+/* different from a variable, using # { } does mean
+ * that any oprations near it will be treated as
+ * plain CSS
+ */
 x {
   what-you-want: 12px / 30px;
   not-what-you-want: 0.4;
 }
 
+/*
+ * == & in SassScript ==
+ */
+/*
+ * === @-Rules and Directives ===
+ */
 /*
  * import
  */
@@ -59,3 +135,244 @@ x {
 /*
  * Nested import
  */
+#main .example {
+  color: red;
+}
+
+/* @media */
+/* It behave as in plain CSS, with one extra capability:
+ * they can be nested in CSS rules.
+ * If a @meida directive appears within a CSS rule,
+ * it will be bubbled up to the top level of the stylesheet
+ */
+.sidebar {
+  width: 300px;
+}
+
+@media screen and (orientation: landscape) {
+  .sidebar {
+    width: 500px;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 1.5) {
+  .sidebar {
+    width: 500px;
+  }
+}
+
+/* @extend */
+/* extend */
+.error, .seriousError {
+  border: 1px #f00;
+  background-color: #fdd;
+}
+
+.seriousError {
+  border-width: 3px;
+}
+
+/* actually it .seriousError will have the style of .error defined anywhere*/
+/* @extend works simply inserting the extending selector(e.g. .seriousError)
+ * anywhere that the extended selector(e.g. .error) appears
+ */
+.error.intrusion, .intrusion.seriousError {
+  background-image: url("/image/hacked.png");
+}
+
+/* @extend-only selectors */
+#context a.notice {
+  color: blue;
+  font-weight: bold;
+  font-size: 2em;
+}
+
+/*
+ * === Control Directives & Expressions ===
+ */
+/* @if */
+p {
+  color: green;
+}
+
+/* @for */
+/*
+ * Usage
+ * @for $var from <start> through <end>  // include <start> and <end>
+ * @for $var from <start> to <end>       // include <start> but not <end>
+ * where <start> and <end> must be expressions that return integers
+ */
+.item-1 {
+  width: 2em;
+}
+
+.item-2 {
+  width: 4em;
+}
+
+.item-3 {
+  width: 6em;
+}
+
+/* @each */
+/*
+ * Usage
+ * @each $var in <list or map>
+ */
+.puma-icon {
+  background-image: url("/images/puma.png");
+}
+
+.sea-slug-icon {
+  background-image: url("/images/sea-slug.png");
+}
+
+.egret-icon {
+  background-image: url("/images/egret.png");
+}
+
+.salamander-icon {
+  background-image: url("/images/salamander.png");
+}
+
+/*
+ * Usage
+ * @each $var1, $var2, ... in <list>
+ * where <list> is a list of lists
+ */
+.puma-icon {
+  background-image: url("/images/puma.png");
+  border: 2px solid black;
+  cursor: default;
+}
+
+.sea-slug-icon {
+  background-image: url("/images/sea-slug.png");
+  border: 2px solid blue;
+  cursor: pointer;
+}
+
+.egret-icon {
+  background-image: url("/images/egret.png");
+  border: 2px solid white;
+  cursor: move;
+}
+
+/*
+ * @each - with map
+ */
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.2em;
+}
+
+/* @while */
+.item-6 {
+  width: 12em;
+}
+
+.item-4 {
+  width: 8em;
+}
+
+.item-2 {
+  width: 4em;
+}
+
+/*
+ * == Mixin ==
+ */
+/* define mixin */
+/* parent selector reference (&) can be used in mixin */
+/* use mixin */
+use-large-text {
+  font-family: Arial;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff0000;
+  font-style: italic;
+}
+
+.clearfix {
+  display: inline-block;
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+* html .clearfix {
+  height: 1px;
+}
+
+/* can be used directly */
+a {
+  color: blue;
+  background-color: red;
+}
+
+/*
+ * = mixin with arguments =
+ */
+/* it can contain default value */
+p {
+  border-color: blue;
+  border-width: 1in;
+  border-style: dashed;
+}
+
+h1 {
+  border-color: red;
+  border-width: 1in;
+  border-style: dashed;
+}
+
+/* you can use keyword arguments */
+p {
+  border-color: black;
+  border-width: 2in;
+  border-style: dashed;
+}
+
+/* variable arguments / unknown number of arguments */
+.shadows {
+  -moz-box-shadow: 0px 4px 5px #666, 2px 6px 10px #999;
+  -webkit-box-shadow: 0px 4px 5px #666, 2px 6px 10px #999;
+  box-shadow: 0px 4px 5px #666, 2px 6px 10px #999;
+}
+
+/* list or map variable as variable arguments */
+.primary {
+  color: #ff0000;
+  background-color: #00ff00;
+  border-color: #0000ff;
+}
+
+.secondary {
+  color: #00ff00;
+  background-color: #0000ff;
+  border-color: #ff0000;
+}
+
+/* = passing content blocks to a mixin = */
+* html #logo {
+  background-image: url(/logo.gif);
+}
+
+/*
+ * == Function ==
+ */
+#sidebar {
+  width: 240px;
+}
