@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+<% contents.forEach( function(content) { %>
+<section class="description">
+<%- content.description %>
+</section>
+<section class="compare">
+  <div class="col left"><%- content.left %></div><div class="col right"><%- content.right %></div>
+</section>
+<% }); %>
+</body>
+</html>

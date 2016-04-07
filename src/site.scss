@@ -1,0 +1,26 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+.description {
+  width: 800px;
+  margin: 0 auto;
+}
+
+.compare {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.col {
+  width: 50%;
+  padding: 1em 1.5em;
+  //float: left;
+  display: inline-block;
+}
+
+.right {
+  background: #f3f3f3;
+}
