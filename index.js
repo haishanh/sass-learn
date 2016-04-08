@@ -6,8 +6,29 @@ const fs = require('fs');
 
 const templateFile = 'src/template.html';
 const template = fs.readFileSync(templateFile, 'utf-8');
+const START = /\/\*!/;
+const END = /!\*\//;
 const descPat = /\/\*!([.\n]*)!\*\//;
 
+function parsePoints(data, opt) {
+
+  let open = opt.open;
+  let close = opt.close;
+  let start = opt.start || 0;
+  let openPoint = null, closePoint = null;
+
+  let cap = null;
+
+  cap = open.exec(data.substring(start));
+  if (cap) {
+    openPoint = cap.index;
+
+    cap = close.exec(data.substring(cap.index + cap[0].length));
+    if (cap) {
+      closePoint = cap.index + cap[0].length;
+    }
+  }
+}
 
 function parseTo(file) {
   let cont = fs.readFileSync(file, 'utf-8');
