@@ -1,6 +1,86 @@
 /*!
-this is a test
-first
+## Sass 是什么
+
+Sass 是 Syntactically Awesome StyleSheets 的缩写，它在原生 CSS 语法的基础上，提供了很多额外的功能，比如变量，规则嵌套， mixin 等等，并且完全兼容 CSS 的原有语法。Sass 的存在，让写 CSS 变的简单和有趣。
+
+Sass 有两种语法。一种是 **SCSS**(Sassy CSS)，它是对CSS 原有语法的扩展，也就是说一个 CSS 文件，也是一个有效的 SCSS 文件。使用这种语法的文件通常使用`.scss`作为扩展名。本文主要以 SCSS 为主。
+
+还有一种是 **缩进式**语法(直接叫Sass)，其语法简洁，使用代码的缩进，代替大括号，来表示 CSS selector 的层级嵌套关系。每条规则后的分号，也被省略去。使用这种语法的文件通常使用`.sass`作为扩展名。
+
+## 使用 Sass
+
+### 使用 Gulp
+
+```js
+var gulp = require('gulp'),
+    sass = require('gulp-sass'),
+
+gulp.task('sass', () => {
+  gulp.src('*.scss')
+    .pipe(sass()).on('error', sass.logError)
+    .pipe(cssbeautify({
+      indent: '  ',
+      autosemicolon: true
+    }))
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('default', ['sass']);
+```
+
+## 基本语法
+
+### 规则嵌套(Nested Rules)
+
+Sass 允许 CSS 规则进行嵌套。
+
+!*/
+
+#main p {
+  color: #f3f3f3;
+
+  .redbox {
+    background-color: #ff0000;
+  }
+}
+
+/*!
+这样在写规则的时候就不用每次都要重复写父级 selector，这使得包含很多层嵌套的复杂 CSS layout 变的简单。比如：
+!*/
+
+#main {
+  width: 97%;
+
+  p, div {
+    font-size: 2em;
+    a { font-weight: bold; }
+  }
+
+  pre { font-size: 3em; }
+}
+
+/*!
+在内部 selector 中，可以使用 `&` 符号来引用 父级 selector。比如：
+!*/
+
+a {
+  color: blue;
+  &:hover {
+    color: red;
+  }
+}
+
+.post {
+  font-size: 1em;
+  &-head {
+    font-size: 1.8em;
+  }
+}
+
+/*!
+### CSS 属性嵌套(Nested Properties)
+
+CSS 中有一些属性存在于「命名空间」中，比如`font-family`, `font-size`, `font-weight` 都存在于 `font` 这个命名空间中。对于类似这样的属性，Sass 提供了一种快捷写法。注意下面例子中`font`后面的冒号：
 !*/
 
 /*
@@ -16,8 +96,549 @@ first
 }
 
 /*!
-this is a test
-second
+## 代码注释
+
+Sass 支持标准 CSS 中的多行注释，另外也支持 单行注释。要注意，在默认情况下生成的 CSS 中，多行注释会被保留，单行注释会被去除。
+!*/
+
+/*
+ * 这是一个多行注释
+ * 会被保留在生成的 CSS 中
+ */
+body {
+  color: black;
+}
+
+// 这是一个单行注释
+// 会被移除
+a {
+  color: green;
+}
+
+/*!
+## 变量
+
+Sass 中可以使用变量。定义变量就像写 CSS 规则一样，只是前面要加上美元符号(`$`)。仔细对于下面的 Sass 及其 CSS 输出。
+!*/
+
+$width: 5em;
+
+#main {
+  width: $width;
+}
+
+/*!
+### 作用域
+
+Sass 变量也是有作用域的。比如：
+!*/
+
+.s1 {
+  $width: 800px;
+  width: $width;
+}
+
+.s2 {
+  $width: 5em;
+  width: $width;
+}
+
+/*!
+### 数据类型
+
+Sass 支持7中数据类型：
+
+  - 数字(numbers)，比如1.2, 12, 10px
+  - 包含引号和不包含引号的字符串(strings of text)，比如"foo", 'bar', baz
+  - 颜色(colors)，比如 `blue`, `#04a3f9`, `rgba(255, 0, 0, 0.5)`
+  - 布尔值(booleans)，包含 `true`, `false`
+  - 空值(nulls)，即`null`
+  - 空格或逗号隔开的列表(lists of values)，比如`1.5em 1em 0 2em`, `Helvetica, Arial, sans-serif`
+  - 键值对映射(maps)，比如 `(key1: value1, key2: value2)`
+
+**通常**，Sass 转换成 CSS 的时候，字符串会保留原来的样子，即如果在 Sass 只有引号，则 CSS  中一会有引号，Sass 中没有引号，则 CSS 中不会有引号。
+
+TODO interpolation
+
+
+### 运算
+
+#### 数字运算
+
+Sass 支持标准的算术运算，加`+`，减`-`，乘`*`，除`/`和 模`%`。 注意，Sass 在进行算术运算的时候会保留单位，所以你也不应该不兼容的单位放在一起运算（比如把使用`px`为单位的数字和使用`em`为单位的数字作加法）。相同单位的两个数相乘也会出现平方单位（`10px * 10px = 100px * px`），而`px * px`并不是一个合法的 CSS 单位。
+
+比较运算符`<`, `>`, `<=`, `>=`也可以用于 Sass 中的数字。 等于和不等于运算符 `==`, `!=`则适用于 Sass 所有数据类型。
+
+##### 除法和`/`
+
+**注意**，因为在有些 CSS 属性中也会有符号`/`，所以在 Sass 中除法运算符`/`会有两种不同的作用。默认情况下，`/`符号会当作字面字符串，而不是除法运算符。然而，有以下3种特殊情况，`/`会被当做除法运算符。
+
+ 1. value或其中的一部分 是一个变量，或者是一个函数的返回值
+ 2. value被包含在小括号中，除非value是一个Sass list
+ 3. value中存在另一个算术运算
+
+!*/
+
+p {
+  font: 10px/8px;               // 不作除法
+  $width: 1000px;
+  width: $width/2;              // 1 使用了变量，作除法
+  width: round(1.5)/2;          // 1 使用了函数，作除法
+  height: (500px/2);            // 2 使用了小括号，作除法
+  margin-left: 5px + 8px/2px;   // 2 使用了 + ，作除法
+  font: (italic bold 10px/8px); // 2 在一个list中，不作除法
+}
+
+/*!
+##### 减法，负数和`-`
+
+符号 `-` 在 CSS 和 Sass 可能意味着减法符号(比如`5px - 3px`)，一个负数(比如`-3px`)，或者是一个属性名的一部分(比如`font-weight`)。TODO
+
+
+#### 颜色值的运算
+
+所有的算术运算也都可以用于颜色值，只是要注意运算时是rgb分开进行计算的。比如下面的例子中，计算会被分成`01 + 04 = 05`, `02 + 05 = 07` 以及 `03 + 06 = 09`:
+!*/
+
+
+p {
+  color: #010203 + #040506;
+}
+
+/*!
+通常适用 颜色函数(color functions) TODO 来进行颜色的操作。
+
+颜色值 和 数字值 之间也是可以进行算术运算的，比如下面的例子中，计算会被分成`01 * 2 = 02`, `02 * 2 = 04` 以及 `03 * 2 = 06`：
+!*/
+
+p {
+  color: #010203 * 2;
+}
+
+/*!
+要注意，对于有 alpha 通道的颜色值，在算术运算时，2个操作数都必须是含有**相同** alpha 值的颜色值。 并且运算时，不影响 alpha 值，比如：
+!*/
+
+p {
+  color: rgba(255, 0, 0, 0.75) + rgba(0, 255, 0, 0.75);
+}
+
+/*!
+如果要调整 alpha 通道值，可以使用 [`opacify`][opa] 和 [`transparentize`][trans] 函数。
+
+[opa]: http://sass-lang.com/documentation/Sass/Script/Functions.html#opacify-instance_method
+[trans]: http://sass-lang.com/documentation/Sass/Script/Functions.html#transparentize-instance_method
+
+#### 字符串运算
+
+加号 `+`，可以用来连接字符串：
+!*/
+
+p {
+  cursor: e + -resize;
+}
+
+/*!
+对于 带引号字符串 和 不带引号字符串 之间的 `+` 运算的结果是否带引号，取决于 `+` **左边**的值。
+!*/
+
+
+p:before {
+  content: "Foo " + Bar;
+  font-family: sans- + "serif";
+}
+
+
+/*!
+在字符串文本中，可以待插入的表达式或变量放到TODO中来进行插入：
+!*/
+
+p:before {
+  content: "I ate #{5 + 10} pies!";
+}
+
+/*!
+Null值在进行 字符串插入 时，会被当作 空字符串：
+!*/
+
+$value: null;
+p:before {
+  content: "I ate #{$value} pies!";
+}
+
+/*!
+#### 布尔值运算
+
+对于布尔值，Sass中可以使用运算符 `and`, `or` 以及 `not`。
+
+#### list运算
+
+通常适用 [list 函数][list-func]来进行 list 的操作。
+
+[list-func]； http://sass-lang.com/documentation/Sass/Script/Functions.html#list-functions
+
+#### 小括号
+
+和其他语言一样，小括号可以用来预想运算的顺序：
+!*/
+
+p {
+  width: 1em + (2em * 3);
+}
+
+/*!
+## 函数(Functions)
+
+Sass 中定义了一些有用的函数，完整的函数列表[在这][func-list]。
+
+[func-list]； http://sass-lang.com/documentation/Sass/Script/Functions.html
+
+Sass 函数调用的方式和 CSS 函数一致：
+!*/
+
+p {
+  color: hsl(0, 100%, 50%);
+}
+
+/*!
+### 关键字参数
+
+Sass 在调用时可以使用关键词参数，使用关键词参数可以提高易读性。同时也不用在意参数顺序。比如上面的例子可以写成：
+!*/
+
+p {
+  color: hsl($hue: 0, $lightness: 50%, $saturation: 100%);
+}
+
+/*!
+### 插入 `#{xxx}`
+
+property 和 selector 都可以使用`#{xxx}`的方式来插入：
+!*/
+
+$name: foo;
+$attr: border;
+p.#{$name} {
+  #{$attr}-color: blue;
+}
+
+/*!
+*value* 中也可以使用`#{xxx}`插入。当然大部分时候我们都会直接使用变量，但使用`#{xxx}`式插入，它旁边的运算符会被当做字面字符串，比如下面例子`/`不会被当做除法符号：
+!*/
+
+p {
+  $font-size: 12px;
+  $line-height: 30px;
+  font: #{$font-size}/#{$line-height};
+}
+
+/*!
+### Sass 中的 `&` 符号
+
+TODO
+
+### 变量默认值
+
+在进行变量赋值时，在*值*后加上 `!default` 表示如果这个变量已经被赋值了，则不进行重复赋值；如果该变量还没有值，则进行赋值。
+!*/
+
+$content: "First content";
+$content: "Second content?" !default;
+$new_content: "First time reference" !default;
+
+#main {
+  content: $content;
+  new-content: $new_content;
+}
+
+/*!
+使用`!default`时，值为`null`的变量会被当做没有值。
+!*/
+
+$content: null;
+$content: "Non-null content" !default;
+
+#main {
+  content: $content;
+}
+
+/*!
+## `@` 规则 和 指令
+
+### `@import`
+
+Sass 扩展了 CSS 的 `@import` 功能，在 Sass 文件中可以 import 其他 SCSS 和 Sass 文件。被 import 的文件中的 变量 和 mixin 都可以在主文件中直接使用。
+
+import Sass 文件时，`@import` 后面接文件名。但是如果是以下情况时，则当做 CSS 的`@import`
+
+ * 被 import 的文件扩展名是`.css`，如 `@import "foo.css"`
+ * 文件名以 `http://` 开头，如 `@import "http://foo.com/bar";`
+ * 文件名是 `url(xxx)` 的方式, 如 `@import url(foo);
+`
+ * `@import`涉及到 media query，如 `@import "foo" screen;`
+
+如果上面的条件不满足，文件扩展名是 `.scss` 或 `.sass` 时，该文件会被 import， 如果没有包含扩展名，则 Sass 会尝试查找使用该文件名，扩展名为 `.scss` 或 `.sass`的文件，并 import 它。
+
+例如，有文件 `foo.scss`， 其中内容为：
+
+```scss
+a {
+  color: red;
+}
+```
+
+则：
+!*/
+
+/* import 之前 */
+@import "foo";
+/* import 之后 */
+
+
+/*!
+`@import "foo", "bar";` 可以同时 import 文件 `foo` 和 `bar`。
+
+#### 部分(Partials)
+
+当一个目录中又多个 Sass 文件时，很多时候我们并不希望把所有这些文件都编译成一个单独的 CSS 文件，这时可以给不用编译成单独 CSS 文件的 Sass 文件的文件名前面加上下划线`_`。在 import 这样的文件的时候，我们并**不**需要加上下划线。
+
+比如你有个文件 `_bar.scss`，因为有文件名以下划线开头，所以不会生成`_bar.css`文件。但你可以在你的主 sass 文件中，import 该文件。
+
+!*/
+
+@import "bar";
+
+/*!
+#### 嵌套(Nested) `@import`
+
+我们可以在 CSS rule 或 `@media` rule 中进行`@import`。 要注意的是，CSS selector 也会嵌套。
+
+比如文件 `_baz.scss` 中包含如下内容：
+
+```scss
+.example {
+  color: red;
+}
+```
+
+则：
+
+!*/
+
+#main {
+  @import "baz";
+}
+
+/*!
+### `@media`
+
+Sass 中的 `@media` 的功能和 CSS 中的类似，但在 Sass 中 `@media` 可以被嵌套在 CSS rule中。如果 `@media` 嵌套在 CSS rule 中，则作用时它会自动冒泡到顶层。比如：
+!*/
+
+.sidebar {
+  width: 300px;
+  @media screen and (orientation: landscape) {
+    width: 500px;
+  }
+}
+
+/*!
+`@media` *queries* 之间也可以进行相互嵌套。这时 *queries* 之间使用 `and` 进行合并。如：
+!*/
+
+@media screen {
+  .sidebar {
+    @media (orientation: landscape) {
+      width: 500px;
+    }
+  }
+}
+
+/*!
+`@midia` *queries* 中也可以在 *feature names* 和 *feature values* 的地方使用 sass 表达式，包括变量，函数，运算操作符。比如：
+!*/
+
+$media: screen;
+$feature: -webkit-min-device-pixel-ratio;
+$value: 1.5;
+
+@media #{$media} and ($feature: $value) {
+  .sidebar {
+    width: 500px;
+  }
+}
+
+/*!
+### `@extend`
+
+`@extend` 指令可以用来继承另一个 selector 的样式。比如：
+!*/
+
+.a {
+  border: 1px #f00;
+}
+.b {
+  @extend .a;
+  border-width: 3px;
+}
+
+/*!
+从上面的例子中可以看出来，实际上 Sass 就是在 `.a` 处插入 `.b`。
+
+实际上，其他包含了 `.a` 的 rule，也会被 `.b` 所使用。比如：
+!*/
+
+.error {
+  border: 1px #f00;
+}
+.error.minor {
+  background-color: #eee;
+}
+.critial {
+  @extend .error;
+  color: tomato;
+}
+
+/*!
+`@extend` 不仅适用于 *class* selector，对于其他 selector 也适用，比如 `.special.cool`， `a:hover`, `a.user[href^="http://"]`等。比如
+!*/
+
+.hoverlink {
+  @extend a:hover;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/*!
+和前面`error.minor`的例子一样， 其他任何包含 `a:hover` 的规则也会被用于 `hoverlink`， 及时其中包含其他 selector。 比如：
+!*/
+
+.hoverlink {
+  @extend a:hover;
+}
+.comment a.user:hover {
+  font-weight: bold;
+}
+
+/*!
+#### 只用于 `@extend` 的 selector
+
+使用 `%` 可以定义一个只用于 extened 的 selector，它相当于占位(placeholder) selector。这样的 selector 及其 rule 不会直接生成到 CSS 中。在定义时，相当于把符号 `%` 用到可以用在符号 `#` 和符号 `.` 的位置。比如：
+!*/
+
+/* before */
+#context a%extreme {
+  color: blue;
+}
+/* after */
+
+/*!
+然后我们可以 `@extend` 这样一个占位 selector。比如：
+!*/
+
+.outer %inner {
+  color: red;
+}
+
+.content {
+  @extend %inner;
+}
+
+/*!
+### `@at-root`
+
+`@at-root` 可以让原本嵌套在其他 selector 中的 selector 置于顶层。比如：
+!*/
+
+.parent {
+  color: red;
+
+  @at-root {
+    .child1 { font-size: 16px; }
+    .child2 { border-width: 2px; }
+  }
+
+  .step-child { background-color: #ccc; }
+}
+
+/*!
+### `@debug`
+
+`@debug` 可以将 Sass 表达式的值打印到标准错误。可以方便的进行 debug。比如：
+
+```scss
+@debug 10em + 12em;
+```
+
+会在终端输出：
+
+```text
+Line 1 DEBUG: 22em
+```
+
+### `@warn`
+
+`@warn` 也可以将 Sass表达式的值打印到标准错误。`@warn` 和 `@debug` 的区别在于，`@warn`在 CLI 选项 `--quiet` 或 Sass 选项 `:quiet`进行关闭，另外 `@warn` 中打印的消息也会包含 warning 的地方。
+
+例子：
+
+!*/
+
+@mixin adjust-location($x, $y) {
+  @if unitless($x) {
+    @warn "Assuming #{$x} to be in pixels";
+    $x: 1px * $x;
+  }
+  @if unitless($y) {
+    @warn "Assuming #{$y} to be in pixels";
+    $y: 1px * $y;
+  }
+  position: relative; left: $x; top: $y;
+}
+
+
+/*!
+### `@error`
+
+`@error` 用来抛出一个错误，其中也会伴随相应的 stack trace。很适合用来对 *mixins* 和 *函数* 中的参数进行合法性验证。比如：
+!*/
+
+@mixin adjust-location($x, $y) {
+  @if unitless($x) {
+    @error "$x may not be unitless, was #{$x}.";
+  }
+  @if unitless($y) {
+    @error "$y may not be unitless, was #{$y}.";
+  }
+  position: relative; left: $x; top: $y;
+}
+
+/*!
+## 控制指令(Directives)和表达式(Expressions)
+
+### `if()`
+
+`if()` 是 Sass 中的内置**函数**。
+
+下面的例子中，第一表达式回返回`1px`， 而第二个会返回 `2px`。
+```scss
+if(true, 1px, 2px)
+if(false, 1px, 2px)
+```
+
+### `@if`
+
+`@if` 指令使用一个 sass 表达式作为参数。如果该表达式的返回 `false` 或 `null` 以外的值，则该指令中嵌套的 style 会被使用。比如：
+!*/
+
+p.with-border {
+  @if 1 + 1 == 2 { border: 1px solid;  }
+  @if 5 < 3      { border: 2px dotted; }
+  @if null       { border: 3px double; }
+}
+
+/*!
 !*/
 
 /*
@@ -211,36 +832,6 @@ $value: 1.5;
 }
 
 
-/* @extend */
-
-/* extend */
-.error {
-  border: 1px #f00;
-  background-color: #fdd;
-}
-.seriousError {
-  @extend .error;
-  border-width: 3px;
-}
-
-/* actually it .seriousError will have the style of .error defined anywhere*/
-/* @extend works simply inserting the extending selector(e.g. .seriousError)
- * anywhere that the extended selector(e.g. .error) appears
- */
-.error.intrusion {
-  background-image: url("/image/hacked.png");
-}
-
-/* @extend-only selectors */
-// This ruleset won't be rendered on its own.
-#context a%extreme {
-  color: blue;
-  font-weight: bold;
-  font-size: 2em;
-}
-.notice {
-  @extend %extreme;
-}
 
 
 /*

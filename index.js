@@ -2,19 +2,20 @@
 
 const ejs = require('ejs');
 const fs = require('fs');
+const markdown = require('marked');
+const hljs = require('highlight.js');
 
 
 const templateFile = 'src/template.html';
 const template = fs.readFileSync(templateFile, 'utf-8');
-const START = /\/\*!/;
-const END = /!\*\//;
-const descPat = /\/\*!([.\n]*)!\*\//;
+const OPEN = /\/\*!/g;
+const CLOSE = /!\*\//g;
+const descPat = /\/\*!\s*\n([\s\S]*?)!\*\//;
 
-function parsePoints(data, opt) {
+function parsePoints(data, opt, start) {
 
   let open = opt.open;
   let close = opt.close;
-  let start = opt.start || 0;
   let openPoint = null, closePoint = null;
 
   let cap = null;
@@ -26,42 +27,96 @@ function parsePoints(data, opt) {
     cap = close.exec(data.substring(cap.index + cap[0].length));
     if (cap) {
       closePoint = cap.index + cap[0].length;
+      console.log(cap);
+      return [openPoint, closePoint];
     }
   }
+  return null;
 }
 
-function parseTo(file) {
-  let cont = fs.readFileSync(file, 'utf-8');
-  console.log(cont);
-  let code = [];
-  let desc = [];
-
+function parse2(data, pat) {
   let cap;
+  let ret = [];
+  while (cap = pat.exec(data)) {
+    ret.push(cap.index);
+  }
 
-  let pre = 0, cur = 0;
-  while(cap = descPat.exec(cont.substring(pre))) {
-    console.log(cap);
+  return ret;
+}
 
-    code.push(cap[1]);
+function parseFile(file) {
+  let cont = fs.readFileSync(file, 'utf-8');
+  //console.log(cont);
 
-    cur = cap.index;
+  let tagLen = 3; // hardcode
+  let openPoints = parse2(cont, OPEN);
+  let closePoints = parse2(cont, CLOSE);
 
-    if(pre != cur) {
-      desc.push(cont.substring(pre, cur))
-    }
 
-    pre = cap.index + cap[0].length;
+  if (openPoints.length != closePoints.length) {
+    console.log('Open and Close tag number not matching');
+    process.exit(1);
+  }
+
+  let descArr = [], codeArr = [];
+  for (let i = 0; i < openPoints.length; i++) {
+    let start = openPoints[i] + tagLen;
+    let end = closePoints[i];
+    descArr.push(cont.substring(start, end));
+
+    start = closePoints[i] + tagLen;
+    end = openPoints[i+1] || cont.length;
+    codeArr.push(cont.substring(start, end));
   }
 
   return {
-    code,
-    desc
+    descArr,
+    codeArr
   };
+
+/*
+  let pointPair;
+  let opt = {
+    open: OPEN,
+    close: CLOSE
+  };
+  let start = 0;
+  let ret = [];
+  while(pointPair = parsePoints(cont, opt, start)) {
+    ret.push(pointPair[0]);
+    ret.push(pointPair[1]);
+    // console.log(pointPair);
+    start = pointPair[1];
+  }
+
+
+  return ret;
+*/
 }
 
-var ret = parseTo('sass/test.scss');
-console.log(ret);
+// var ret = parseFile('test.txt');
+// var ret = parseFile('sass/test.scss');
 
+function populateData() {
+  let data = [];
+  let parsedBefore = parseFile('sass/test.scss');
+  let parsedAfter = parseFile('css/test.css');
+
+  for(let i = 0; i < parsedBefore.descArr.length; i++) {
+    let one = {};
+    let left = parsedBefore.codeArr[i];
+    let right = parsedAfter.codeArr[i];
+    console.log(left.length, right.length);
+    one.description = markdown(parsedBefore.descArr[i]);
+    one.left = '<pre><code>' + hljs.highlight('scss', left).value + '</code></pre>';
+    one.right = '<pre><code>' + hljs.highlight('css', right).value + '</code></pre>';
+
+    data.push(one);
+  }
+  return {
+    contents: data
+  };
+}
 
 // hardcode
 var content = {
@@ -71,9 +126,8 @@ var content = {
   right: '<p>world<p>'
 };
 
-const data = {
-  contents: [content, content]
-}
+const data = populateData();
 
 
 var ret = ejs.render(template, data);
+fs.writeFileSync('src/index.html', ret);

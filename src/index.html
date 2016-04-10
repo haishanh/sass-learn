@@ -5,28 +5,1789 @@
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
+
 <section class="description">
-  <h2>Heading2</h2>
-  <p>test is a tes tparagraph</p>
+<h2 id="sass-">Sass 是什么</h2>
+<p>Sass 是 Syntactically Awesome StyleSheets 的缩写，它在原生 CSS 语法的基础上，提供了很多额外的功能，比如变量，规则嵌套， mixin 等等，并且完全兼容 CSS 的原有语法。Sass 的存在，让写 CSS 变的简单和有趣。</p>
+<p>Sass 有两种语法。一种是 <strong>SCSS</strong>(Sassy CSS)，它是对CSS 原有语法的扩展，也就是说一个 CSS 文件，也是一个有效的 SCSS 文件。使用这种语法的文件通常使用<code>.scss</code>作为扩展名。本文主要以 SCSS 为主。</p>
+<p>还有一种是 <strong>缩进式</strong>语法(直接叫Sass)，其语法简洁，使用代码的缩进，代替大括号，来表示 CSS selector 的层级嵌套关系。每条规则后的分号，也被省略去。使用这种语法的文件通常使用<code>.sass</code>作为扩展名。</p>
+<h2 id="-sass">使用 Sass</h2>
+<h3 id="-gulp">使用 Gulp</h3>
+<pre><code class="lang-js">var gulp = require(&#39;gulp&#39;),
+    sass = require(&#39;gulp-sass&#39;),
+
+gulp.task(&#39;sass&#39;, () =&gt; {
+  gulp.src(&#39;*.scss&#39;)
+    .pipe(sass()).on(&#39;error&#39;, sass.logError)
+    .pipe(cssbeautify({
+      indent: &#39;  &#39;,
+      autosemicolon: true
+    }))
+    .pipe(gulp.dest(&#39;dist&#39;));
+});
+
+gulp.task(&#39;default&#39;, [&#39;sass&#39;]);
+</code></pre>
+<h2 id="-">基本语法</h2>
+<h3 id="-nested-rules-">规则嵌套(Nested Rules)</h3>
+<p>Sass 允许 CSS 规则进行嵌套。</p>
+
 </section>
-<section class="compare">
-  <div class="col left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit aut libero voluptatem commodi maiores, tempora repellat! Quod dolores dolore velit eius nam, voluptatem nihil fuga quae similique, ratione, at voluptate.</div><div class="col right">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit aut libero voluptatem commodi maiores, tempora repellat! Quod dolores dolore velit eius nam, voluptatem nihil fuga quae similique, ratione, at voluptate.</div>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-id">#main</span> <span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#f3f3f3</span>;
+
+  <span class="hljs-selector-class">.redbox</span> {
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#ff0000</span>;
+  }
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-id">#main</span> <span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#f3f3f3</span>;
+}
+
+<span class="hljs-selector-id">#main</span> <span class="hljs-selector-tag">p</span> <span class="hljs-selector-class">.redbox</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#ff0000</span>;
+}
+
+</code></pre></div>
 </section>
 
 <section class="description">
-  <h2>Heading2</h2>
-  <p>test is a tes tparagraph</p>
+<p>这样在写规则的时候就不用每次都要重复写父级 selector，这使得包含很多层嵌套的复杂 CSS layout 变的简单。比如：</p>
+
 </section>
-<section class="compare">
-  <div class="col left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit aut libero voluptatem commodi maiores, tempora repellat! Quod dolores dolore velit eius nam, voluptatem nihil fuga quae similique, ratione, at voluptate.</div><div class="col right">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit aut libero voluptatem commodi maiores, tempora repellat! Quod dolores dolore velit eius nam, voluptatem nihil fuga quae similique, ratione, at voluptate.</div>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-id">#main</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">97%</span>;
+
+  <span class="hljs-selector-tag">p</span>, <span class="hljs-selector-tag">div</span> {
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">2em</span>;
+    <span class="hljs-selector-tag">a</span> { <span class="hljs-attribute">font-weight</span>: bold; }
+  }
+
+  <span class="hljs-selector-tag">pre</span> { <span class="hljs-attribute">font-size</span>: <span class="hljs-number">3em</span>; }
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-id">#main</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">97%</span>;
+}
+
+<span class="hljs-selector-id">#main</span> <span class="hljs-selector-tag">p</span>, <span class="hljs-selector-id">#main</span> <span class="hljs-selector-tag">div</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">2em</span>;
+}
+
+<span class="hljs-selector-id">#main</span> <span class="hljs-selector-tag">p</span> <span class="hljs-selector-tag">a</span>, <span class="hljs-selector-id">#main</span> <span class="hljs-selector-tag">div</span> <span class="hljs-selector-tag">a</span> {
+  <span class="hljs-attribute">font-weight</span>: bold;
+}
+
+<span class="hljs-selector-id">#main</span> <span class="hljs-selector-tag">pre</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">3em</span>;
+}
+
+</code></pre></div>
 </section>
 
 <section class="description">
-  <h2>Heading2</h2>
-  <p>test is a tes tparagraph</p>
+<p>在内部 selector 中，可以使用 <code>&amp;</code> 符号来引用 父级 selector。比如：</p>
+
 </section>
-<section class="compare">
-  <div class="col left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit aut libero voluptatem commodi maiores, tempora repellat! Quod dolores dolore velit eius nam, voluptatem nihil fuga quae similique, ratione, at voluptate.</div><div class="col right">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit aut libero voluptatem commodi maiores, tempora repellat! Quod dolores dolore velit eius nam, voluptatem nihil fuga quae similique, ratione, at voluptate.</div>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">a</span> {
+  <span class="hljs-attribute">color</span>: blue;
+  &amp;:hover {
+    <span class="hljs-attribute">color</span>: red;
+  }
+}
+
+<span class="hljs-selector-class">.post</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1em</span>;
+  &amp;-<span class="hljs-selector-tag">head</span> {
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.8em</span>;
+  }
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">a</span> {
+  <span class="hljs-attribute">color</span>: blue;
+}
+
+<span class="hljs-selector-tag">a</span><span class="hljs-selector-pseudo">:hover</span>, <span class="hljs-selector-class">.hoverlink</span> {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+<span class="hljs-selector-class">.post</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1em</span>;
+}
+
+<span class="hljs-selector-class">.post-head</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.8em</span>;
+}
+
+</code></pre></div>
 </section>
+
+<section class="description">
+<h3 id="css-nested-properties-">CSS 属性嵌套(Nested Properties)</h3>
+<p>CSS 中有一些属性存在于「命名空间」中，比如<code>font-family</code>, <code>font-size</code>, <code>font-weight</code> 都存在于 <code>font</code> 这个命名空间中。对于类似这样的属性，Sass 提供了一种快捷写法。注意下面例子中<code>font</code>后面的冒号：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-comment">/*
+ * Nested Properties
+ */</span>
+
+<span class="hljs-selector-class">.funky</span> {
+  <span class="hljs-attribute">font</span>: {
+    family: Monaco;
+    size: <span class="hljs-number">0.9em</span>;
+    weight: bold;
+  }
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-comment">/*
+ * Nested Properties
+ */</span>
+<span class="hljs-selector-class">.funky</span> {
+  <span class="hljs-attribute">font-family</span>: Monaco;
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">0.9em</span>;
+  <span class="hljs-attribute">font-weight</span>: bold;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h2 id="-">代码注释</h2>
+<p>Sass 支持标准 CSS 中的多行注释，另外也支持 单行注释。要注意，在默认情况下生成的 CSS 中，多行注释会被保留，单行注释会被去除。</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-comment">/*
+ * 这是一个多行注释
+ * 会被保留在生成的 CSS 中
+ */</span>
+<span class="hljs-selector-tag">body</span> {
+  <span class="hljs-attribute">color</span>: black;
+}
+
+<span class="hljs-comment">// 这是一个单行注释</span>
+<span class="hljs-comment">// 会被移除</span>
+<span class="hljs-selector-tag">a</span> {
+  <span class="hljs-attribute">color</span>: green;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-comment">/*
+ * 这是一个多行注释
+ * 会被保留在生成的 CSS 中
+ */</span>
+<span class="hljs-selector-tag">body</span> {
+  <span class="hljs-attribute">color</span>: black;
+}
+
+<span class="hljs-selector-tag">a</span> {
+  <span class="hljs-attribute">color</span>: green;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h2 id="-">变量</h2>
+<p>Sass 中可以使用变量。定义变量就像写 CSS 规则一样，只是前面要加上美元符号(<code>$</code>)。仔细对于下面的 Sass 及其 CSS 输出。</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-variable">$width</span>: <span class="hljs-number">5em</span>;
+
+<span class="hljs-selector-id">#main</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-variable">$width</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-id">#main</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">5em</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h3 id="-">作用域</h3>
+<p>Sass 变量也是有作用域的。比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-class">.s1</span> {
+  <span class="hljs-variable">$width</span>: <span class="hljs-number">800px</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-variable">$width</span>;
+}
+
+<span class="hljs-selector-class">.s2</span> {
+  <span class="hljs-variable">$width</span>: <span class="hljs-number">5em</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-variable">$width</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-class">.s1</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">800px</span>;
+}
+
+<span class="hljs-selector-class">.s2</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">5em</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h3 id="-">数据类型</h3>
+<p>Sass 支持7中数据类型：</p>
+<ul>
+<li>数字(numbers)，比如1.2, 12, 10px</li>
+<li>包含引号和不包含引号的字符串(strings of text)，比如&quot;foo&quot;, &#39;bar&#39;, baz</li>
+<li>颜色(colors)，比如 <code>blue</code>, <code>#04a3f9</code>, <code>rgba(255, 0, 0, 0.5)</code></li>
+<li>布尔值(booleans)，包含 <code>true</code>, <code>false</code></li>
+<li>空值(nulls)，即<code>null</code></li>
+<li>空格或逗号隔开的列表(lists of values)，比如<code>1.5em 1em 0 2em</code>, <code>Helvetica, Arial, sans-serif</code></li>
+<li>键值对映射(maps)，比如 <code>(key1: value1, key2: value2)</code></li>
+</ul>
+<p><strong>通常</strong>，Sass 转换成 CSS 的时候，字符串会保留原来的样子，即如果在 Sass 只有引号，则 CSS  中一会有引号，Sass 中没有引号，则 CSS 中不会有引号。</p>
+<p>TODO interpolation</p>
+<h3 id="-">运算</h3>
+<h4 id="-">数字运算</h4>
+<p>Sass 支持标准的算术运算，加<code>+</code>，减<code>-</code>，乘<code>*</code>，除<code>/</code>和 模<code>%</code>。 注意，Sass 在进行算术运算的时候会保留单位，所以你也不应该不兼容的单位放在一起运算（比如把使用<code>px</code>为单位的数字和使用<code>em</code>为单位的数字作加法）。相同单位的两个数相乘也会出现平方单位（<code>10px * 10px = 100px * px</code>），而<code>px * px</code>并不是一个合法的 CSS 单位。</p>
+<p>比较运算符<code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>也可以用于 Sass 中的数字。 等于和不等于运算符 <code>==</code>, <code>!=</code>则适用于 Sass 所有数据类型。</p>
+<h5 id="-">除法和<code>/</code></h5>
+<p><strong>注意</strong>，因为在有些 CSS 属性中也会有符号<code>/</code>，所以在 Sass 中除法运算符<code>/</code>会有两种不同的作用。默认情况下，<code>/</code>符号会当作字面字符串，而不是除法运算符。然而，有以下3种特殊情况，<code>/</code>会被当做除法运算符。</p>
+<ol>
+<li>value或其中的一部分 是一个变量，或者是一个函数的返回值</li>
+<li>value被包含在小括号中，除非value是一个Sass list</li>
+<li>value中存在另一个算术运算</li>
+</ol>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">font</span>: <span class="hljs-number">10px</span>/<span class="hljs-number">8px</span>;               <span class="hljs-comment">// 不作除法</span>
+  <span class="hljs-variable">$width</span>: <span class="hljs-number">1000px</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-variable">$width</span>/<span class="hljs-number">2</span>;              <span class="hljs-comment">// 1 使用了变量，作除法</span>
+  <span class="hljs-attribute">width</span>: round(<span class="hljs-number">1.5</span>)/<span class="hljs-number">2</span>;          <span class="hljs-comment">// 1 使用了函数，作除法</span>
+  <span class="hljs-attribute">height</span>: (<span class="hljs-number">500px</span>/<span class="hljs-number">2</span>);            <span class="hljs-comment">// 2 使用了小括号，作除法</span>
+  <span class="hljs-attribute">margin-left</span>: <span class="hljs-number">5px</span> + <span class="hljs-number">8px</span>/<span class="hljs-number">2px</span>;   <span class="hljs-comment">// 2 使用了 + ，作除法</span>
+  <span class="hljs-attribute">font</span>: (italic bold <span class="hljs-number">10px</span>/<span class="hljs-number">8px</span>); <span class="hljs-comment">// 2 在一个list中，不作除法</span>
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">font</span>: <span class="hljs-number">10px</span>/<span class="hljs-number">8px</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">1</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">250px</span>;
+  <span class="hljs-attribute">margin-left</span>: <span class="hljs-number">9px</span>;
+  <span class="hljs-attribute">font</span>: italic bold <span class="hljs-number">10px</span>/<span class="hljs-number">8px</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h5 id="-">减法，负数和<code>-</code></h5>
+<p>符号 <code>-</code> 在 CSS 和 Sass 可能意味着减法符号(比如<code>5px - 3px</code>)，一个负数(比如<code>-3px</code>)，或者是一个属性名的一部分(比如<code>font-weight</code>)。TODO</p>
+<h4 id="-">颜色值的运算</h4>
+<p>所有的算术运算也都可以用于颜色值，只是要注意运算时是rgb分开进行计算的。比如下面的例子中，计算会被分成<code>01 + 04 = 05</code>, <code>02 + 05 = 07</code> 以及 <code>03 + 06 = 09</code>:</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#010203</span> + <span class="hljs-number">#040506</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#050709</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p>通常适用 颜色函数(color functions) TODO 来进行颜色的操作。</p>
+<p>颜色值 和 数字值 之间也是可以进行算术运算的，比如下面的例子中，计算会被分成<code>01 * 2 = 02</code>, <code>02 * 2 = 04</code> 以及 <code>03 * 2 = 06</code>：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#010203</span> * <span class="hljs-number">2</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#020406</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p>要注意，对于有 alpha 通道的颜色值，在算术运算时，2个操作数都必须是含有<strong>相同</strong> alpha 值的颜色值。 并且运算时，不影响 alpha 值，比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: rgba(<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.75</span>) + rgba(<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.75</span>);
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">rgba</span>(255, 255, 0, 0.75);
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p>如果要调整 alpha 通道值，可以使用 <a href="http://sass-lang.com/documentation/Sass/Script/Functions.html#opacify-instance_method"><code>opacify</code></a> 和 <a href="http://sass-lang.com/documentation/Sass/Script/Functions.html#transparentize-instance_method"><code>transparentize</code></a> 函数。</p>
+<h4 id="-">字符串运算</h4>
+<p>加号 <code>+</code>，可以用来连接字符串：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">cursor</span>: e + -resize;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">cursor</span>: e-resize;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p>对于 带引号字符串 和 不带引号字符串 之间的 <code>+</code> 运算的结果是否带引号，取决于 <code>+</code> <strong>左边</strong>的值。</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+
+<span class="hljs-selector-tag">p</span>:before {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"Foo "</span> + Bar;
+  <span class="hljs-attribute">font-family</span>: sans- + <span class="hljs-string">"serif"</span>;
+}
+
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span><span class="hljs-selector-pseudo">:before</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"Foo Bar"</span>;
+  <span class="hljs-attribute">font-family</span>: sans-serif;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p>在字符串文本中，可以待插入的表达式或变量放到TODO中来进行插入：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">p</span>:before {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"I ate #{5 + 10} pies!"</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span><span class="hljs-selector-pseudo">:before</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"I ate 15 pies!"</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p>Null值在进行 字符串插入 时，会被当作 空字符串：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-variable">$value</span>: null;
+<span class="hljs-selector-tag">p</span>:before {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"I ate #{$value} pies!"</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span><span class="hljs-selector-pseudo">:before</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"I ate  pies!"</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h4 id="-">布尔值运算</h4>
+<p>对于布尔值，Sass中可以使用运算符 <code>and</code>, <code>or</code> 以及 <code>not</code>。</p>
+<h4 id="list-">list运算</h4>
+<p>通常适用 [list 函数][list-func]来进行 list 的操作。</p>
+<p>[list-func]； <a href="http://sass-lang.com/documentation/Sass/Script/Functions.html#list-functions">http://sass-lang.com/documentation/Sass/Script/Functions.html#list-functions</a></p>
+<h4 id="-">小括号</h4>
+<p>和其他语言一样，小括号可以用来预想运算的顺序：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">1em</span> + (<span class="hljs-number">2em</span> * <span class="hljs-number">3</span>);
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">7em</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h2 id="-functions-">函数(Functions)</h2>
+<p>Sass 中定义了一些有用的函数，完整的函数列表[在这][func-list]。</p>
+<p>[func-list]； <a href="http://sass-lang.com/documentation/Sass/Script/Functions.html">http://sass-lang.com/documentation/Sass/Script/Functions.html</a></p>
+<p>Sass 函数调用的方式和 CSS 函数一致：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: hsl(<span class="hljs-number">0</span>, <span class="hljs-number">100%</span>, <span class="hljs-number">50%</span>);
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h3 id="-">关键字参数</h3>
+<p>Sass 在调用时可以使用关键词参数，使用关键词参数可以提高易读性。同时也不用在意参数顺序。比如上面的例子可以写成：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: hsl(<span class="hljs-variable">$hue</span>: <span class="hljs-number">0</span>, <span class="hljs-variable">$lightness</span>: <span class="hljs-number">50%</span>, <span class="hljs-variable">$saturation</span>: <span class="hljs-number">100%</span>);
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h3 id="-xxx-">插入 <code>#{xxx}</code></h3>
+<p>property 和 selector 都可以使用<code>#{xxx}</code>的方式来插入：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-variable">$name</span>: foo;
+<span class="hljs-variable">$attr</span>: border;
+<span class="hljs-selector-tag">p</span>.#{<span class="hljs-variable">$name</span>} {
+  #{<span class="hljs-variable">$attr</span>}-<span class="hljs-attribute">color</span>: blue;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.foo</span> {
+  <span class="hljs-attribute">border-color</span>: blue;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p><em>value</em> 中也可以使用<code>#{xxx}</code>插入。当然大部分时候我们都会直接使用变量，但使用<code>#{xxx}</code>式插入，它旁边的运算符会被当做字面字符串，比如下面例子<code>/</code>不会被当做除法符号：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-variable">$font-size</span>: <span class="hljs-number">12px</span>;
+  <span class="hljs-variable">$line-height</span>: <span class="hljs-number">30px</span>;
+  <span class="hljs-attribute">font</span>: #{<span class="hljs-variable">$font-size</span>}/#{<span class="hljs-variable">$line-height</span>};
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">font</span>: <span class="hljs-number">12px</span> / <span class="hljs-number">30px</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h3 id="sass-">Sass 中的 <code>&amp;</code> 符号</h3>
+<p>TODO</p>
+<h3 id="-">变量默认值</h3>
+<p>在进行变量赋值时，在<em>值</em>后加上 <code>!default</code> 表示如果这个变量已经被赋值了，则不进行重复赋值；如果该变量还没有值，则进行赋值。</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-variable">$content</span>: <span class="hljs-string">"First content"</span>;
+<span class="hljs-variable">$content</span>: <span class="hljs-string">"Second content?"</span> !default;
+<span class="hljs-variable">$new_content</span>: <span class="hljs-string">"First time reference"</span> !default;
+
+<span class="hljs-selector-id">#main</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-variable">$content</span>;
+  new-<span class="hljs-attribute">content</span>: <span class="hljs-variable">$new_content</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-id">#main</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"First content"</span>;
+  <span class="hljs-attribute">new-content</span>: <span class="hljs-string">"First time reference"</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p>使用<code>!default</code>时，值为<code>null</code>的变量会被当做没有值。</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-variable">$content</span>: null;
+<span class="hljs-variable">$content</span>: <span class="hljs-string">"Non-null content"</span> !default;
+
+<span class="hljs-selector-id">#main</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-variable">$content</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-id">#main</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"Non-null content"</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h2 id="-"><code>@</code> 规则 和 指令</h2>
+<h3 id="-import-"><code>@import</code></h3>
+<p>Sass 扩展了 CSS 的 <code>@import</code> 功能，在 Sass 文件中可以 import 其他 SCSS 和 Sass 文件。被 import 的文件中的 变量 和 mixin 都可以在主文件中直接使用。</p>
+<p>import Sass 文件时，<code>@import</code> 后面接文件名。但是如果是以下情况时，则当做 CSS 的<code>@import</code></p>
+<ul>
+<li>被 import 的文件扩展名是<code>.css</code>，如 <code>@import &quot;foo.css&quot;</code></li>
+<li>文件名以 <code>http://</code> 开头，如 <code>@import &quot;http://foo.com/bar&quot;;</code></li>
+<li>文件名是 <code>url(xxx)</code> 的方式, 如 <code>@import url(foo);</code></li>
+<li><code>@import</code>涉及到 media query，如 <code>@import &quot;foo&quot; screen;</code></li>
+</ul>
+<p>如果上面的条件不满足，文件扩展名是 <code>.scss</code> 或 <code>.sass</code> 时，该文件会被 import， 如果没有包含扩展名，则 Sass 会尝试查找使用该文件名，扩展名为 <code>.scss</code> 或 <code>.sass</code>的文件，并 import 它。</p>
+<p>例如，有文件 <code>foo.scss</code>， 其中内容为：</p>
+<pre><code class="lang-scss">a {
+  color: red;
+}
+</code></pre>
+<p>则：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-comment">/* import 之前 */</span>
+@<span class="hljs-keyword">import</span> <span class="hljs-string">"foo"</span>;
+<span class="hljs-comment">/* import 之后 */</span>
+
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-comment">/* import 之前 */</span>
+<span class="hljs-selector-tag">a</span> {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+<span class="hljs-comment">/* import 之后 */</span>
+</code></pre></div>
+</section>
+
+<section class="description">
+<p><code>@import &quot;foo&quot;, &quot;bar&quot;;</code> 可以同时 import 文件 <code>foo</code> 和 <code>bar</code>。</p>
+<h4 id="-partials-">部分(Partials)</h4>
+<p>当一个目录中又多个 Sass 文件时，很多时候我们并不希望把所有这些文件都编译成一个单独的 CSS 文件，这时可以给不用编译成单独 CSS 文件的 Sass 文件的文件名前面加上下划线<code>_</code>。在 import 这样的文件的时候，我们并<strong>不</strong>需要加上下划线。</p>
+<p>比如你有个文件 <code>_bar.scss</code>，因为有文件名以下划线开头，所以不会生成<code>_bar.css</code>文件。但你可以在你的主 sass 文件中，import 该文件。</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+@<span class="hljs-keyword">import</span> <span class="hljs-string">"bar"</span>;
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-comment">/* in _bar.scss */</span>
+<span class="hljs-selector-tag">a</span> {
+  <span class="hljs-attribute">color</span>: green;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h4 id="-nested-import-">嵌套(Nested) <code>@import</code></h4>
+<p>我们可以在 CSS rule 或 <code>@media</code> rule 中进行<code>@import</code>。 要注意的是，CSS selector 也会嵌套。</p>
+<p>比如文件 <code>_baz.scss</code> 中包含如下内容：</p>
+<pre><code class="lang-scss">.example {
+  color: red;
+}
+</code></pre>
+<p>则：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-id">#main</span> {
+  @<span class="hljs-keyword">import</span> <span class="hljs-string">"baz"</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-id">#main</span> <span class="hljs-selector-class">.example</span> {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h3 id="-media-"><code>@media</code></h3>
+<p>Sass 中的 <code>@media</code> 的功能和 CSS 中的类似，但在 Sass 中 <code>@media</code> 可以被嵌套在 CSS rule中。如果 <code>@media</code> 嵌套在 CSS rule 中，则作用时它会自动冒泡到顶层。比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-class">.sidebar</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">300px</span>;
+  @<span class="hljs-keyword">media</span> screen and (orientation: landscape) {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+  }
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-class">.sidebar</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">300px</span>;
+}
+
+@<span class="hljs-keyword">media</span> screen and (orientation: landscape) {
+  <span class="hljs-selector-class">.sidebar</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+  }
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p><code>@media</code> <em>queries</em> 之间也可以进行相互嵌套。这时 <em>queries</em> 之间使用 <code>and</code> 进行合并。如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+@<span class="hljs-keyword">media</span> screen {
+  <span class="hljs-selector-class">.sidebar</span> {
+    @<span class="hljs-keyword">media</span> (orientation: landscape) {
+      <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+    }
+  }
+}
+
+</code></pre></div><div class="col right"><pre><code>
+@<span class="hljs-keyword">media</span> screen and (orientation: landscape) {
+  <span class="hljs-selector-class">.sidebar</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+  }
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p><code>@midia</code> <em>queries</em> 中也可以在 <em>feature names</em> 和 <em>feature values</em> 的地方使用 sass 表达式，包括变量，函数，运算操作符。比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-variable">$media</span>: screen;
+<span class="hljs-variable">$feature</span>: -webkit-min-device-pixel-ratio;
+<span class="hljs-variable">$value</span>: <span class="hljs-number">1.5</span>;
+
+@<span class="hljs-keyword">media</span> #{<span class="hljs-variable">$media</span>} and (<span class="hljs-variable">$feature</span>: <span class="hljs-variable">$value</span>) {
+  .sidebar {
+    width: <span class="hljs-number">500px</span>;
+  }
+}
+
+</code></pre></div><div class="col right"><pre><code>
+@<span class="hljs-keyword">media</span> screen and (-webkit-min-device-pixel-ratio: <span class="hljs-number">1.5</span>) {
+  <span class="hljs-selector-class">.sidebar</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+  }
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h3 id="-extend-"><code>@extend</code></h3>
+<p><code>@extend</code> 指令可以用来继承另一个 selector 的样式。比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-class">.a</span> {
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> <span class="hljs-number">#f00</span>;
+}
+<span class="hljs-selector-class">.b</span> {
+  @<span class="hljs-keyword">extend</span> .a;
+  <span class="hljs-attribute">border-width</span>: <span class="hljs-number">3px</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-class">.a</span>, <span class="hljs-selector-class">.b</span> {
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> <span class="hljs-number">#f00</span>;
+}
+
+<span class="hljs-selector-class">.b</span> {
+  <span class="hljs-attribute">border-width</span>: <span class="hljs-number">3px</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p>从上面的例子中可以看出来，实际上 Sass 就是在 <code>.a</code> 处插入 <code>.b</code>。</p>
+<p>实际上，其他包含了 <code>.a</code> 的 rule，也会被 <code>.b</code> 所使用。比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-class">.error</span> {
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> <span class="hljs-number">#f00</span>;
+}
+<span class="hljs-selector-class">.error</span><span class="hljs-selector-class">.minor</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#eee</span>;
+}
+<span class="hljs-selector-class">.critial</span> {
+  @<span class="hljs-keyword">extend</span> .error;
+  <span class="hljs-attribute">color</span>: tomato;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-class">.error</span>, <span class="hljs-selector-class">.critial</span> {
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> <span class="hljs-number">#f00</span>;
+}
+
+<span class="hljs-selector-class">.error</span><span class="hljs-selector-class">.minor</span>, <span class="hljs-selector-class">.minor</span><span class="hljs-selector-class">.critial</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#eee</span>;
+}
+
+<span class="hljs-selector-class">.critial</span> {
+  <span class="hljs-attribute">color</span>: tomato;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p><code>@extend</code> 不仅适用于 <em>class</em> selector，对于其他 selector 也适用，比如 <code>.special.cool</code>， <code>a:hover</code>, <code>a.user[href^=&quot;http://&quot;]</code>等。比如</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-class">.hoverlink</span> {
+  @<span class="hljs-keyword">extend</span> a:hover;
+}
+<span class="hljs-selector-tag">a</span>:hover {
+  <span class="hljs-attribute">text-decoration</span>: underline;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">a</span><span class="hljs-selector-pseudo">:hover</span>, <span class="hljs-selector-class">.hoverlink</span> {
+  <span class="hljs-attribute">text-decoration</span>: underline;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<p>和前面<code>error.minor</code>的例子一样， 其他任何包含 <code>a:hover</code> 的规则也会被用于 <code>hoverlink</code>， 及时其中包含其他 selector。 比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-class">.hoverlink</span> {
+  @<span class="hljs-keyword">extend</span> a:hover;
+}
+<span class="hljs-selector-class">.comment</span> <span class="hljs-selector-tag">a</span><span class="hljs-selector-class">.user</span>:hover {
+  <span class="hljs-attribute">font-weight</span>: bold;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-class">.comment</span> <span class="hljs-selector-tag">a</span><span class="hljs-selector-class">.user</span><span class="hljs-selector-pseudo">:hover</span>, <span class="hljs-selector-class">.comment</span> <span class="hljs-selector-class">.user</span><span class="hljs-selector-class">.hoverlink</span> {
+  <span class="hljs-attribute">font-weight</span>: bold;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h4 id="-extend-selector">只用于 <code>@extend</code> 的 selector</h4>
+<p>使用 <code>%</code> 可以定义一个只用于 extened 的 selector，它相当于占位(placeholder) selector。这样的 selector 及其 rule 不会直接生成到 CSS 中。在定义时，相当于把符号 <code>%</code> 用到可以用在符号 <code>#</code> 和符号 <code>.</code> 的位置。比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-comment">/* before */</span>
+<span class="hljs-selector-id">#context</span> <span class="hljs-selector-tag">a</span>%extreme {
+  <span class="hljs-attribute">color</span>: blue;
+}
+<span class="hljs-comment">/* after */</span>
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-comment">/* before */</span>
+<span class="hljs-comment">/* after */</span>
+</code></pre></div>
+</section>
+
+<section class="description">
+<p>然后我们可以 <code>@extend</code> 这样一个占位 selector。比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-class">.outer</span> %inner {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+<span class="hljs-selector-class">.content</span> {
+  @<span class="hljs-keyword">extend</span> %inner;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-class">.outer</span> <span class="hljs-selector-class">.content</span> {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h3 id="-at-root-"><code>@at-root</code></h3>
+<p><code>@at-root</code> 可以让原本嵌套在其他 selector 中的 selector 置于顶层。比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-class">.parent</span> {
+  <span class="hljs-attribute">color</span>: red;
+
+  @at-root {
+    <span class="hljs-selector-class">.child1</span> { <span class="hljs-attribute">font-size</span>: <span class="hljs-number">16px</span>; }
+    <span class="hljs-selector-class">.child2</span> { <span class="hljs-attribute">border-width</span>: <span class="hljs-number">2px</span>; }
+  }
+
+  <span class="hljs-selector-class">.step-child</span> { <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#ccc</span>; }
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-class">.parent</span> {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+<span class="hljs-selector-class">.child1</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">16px</span>;
+}
+
+<span class="hljs-selector-class">.child2</span> {
+  <span class="hljs-attribute">border-width</span>: <span class="hljs-number">2px</span>;
+}
+
+<span class="hljs-selector-class">.parent</span> <span class="hljs-selector-class">.step-child</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#ccc</span>;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+<h3 id="-debug-"><code>@debug</code></h3>
+<p><code>@debug</code> 可以将 Sass 表达式的值打印到标准错误。可以方便的进行 debug。比如：</p>
+<pre><code class="lang-scss">@debug 10em + 12em;
+</code></pre>
+<p>会在终端输出：</p>
+<pre><code class="lang-text">Line 1 DEBUG: 22em
+</code></pre>
+<h3 id="-warn-"><code>@warn</code></h3>
+<p><code>@warn</code> 也可以将 Sass表达式的值打印到标准错误。<code>@warn</code> 和 <code>@debug</code> 的区别在于，<code>@warn</code>在 CLI 选项 <code>--quiet</code> 或 Sass 选项 <code>:quiet</code>进行关闭，另外 <code>@warn</code> 中打印的消息也会包含 warning 的地方。</p>
+<p>例子：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+@<span class="hljs-keyword">mixin</span> adjust-location(<span class="hljs-variable">$x</span>, <span class="hljs-variable">$y</span>) {
+  @<span class="hljs-keyword">if</span> unitless(<span class="hljs-variable">$x</span>) {
+    @<span class="hljs-keyword">warn</span> <span class="hljs-string">"Assuming #{$x} to be in pixels"</span>;
+    <span class="hljs-variable">$x</span>: <span class="hljs-number">1px</span> * <span class="hljs-variable">$x</span>;
+  }
+  @<span class="hljs-keyword">if</span> unitless(<span class="hljs-variable">$y</span>) {
+    @<span class="hljs-keyword">warn</span> <span class="hljs-string">"Assuming #{$y} to be in pixels"</span>;
+    <span class="hljs-variable">$y</span>: <span class="hljs-number">1px</span> * <span class="hljs-variable">$y</span>;
+  }
+  <span class="hljs-attribute">position</span>: relative; <span class="hljs-attribute">left</span>: <span class="hljs-variable">$x</span>; <span class="hljs-attribute">top</span>: <span class="hljs-variable">$y</span>;
+}
+
+
+</code></pre></div><div class="col right"><pre><code>
+</code></pre></div>
+</section>
+
+<section class="description">
+<h3 id="-error-"><code>@error</code></h3>
+<p><code>@error</code> 用来抛出一个错误，其中也会伴随相应的 stack trace。很适合用来对 <em>mixins</em> 和 <em>函数</em> 中的参数进行合法性验证。比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+@<span class="hljs-keyword">mixin</span> adjust-location(<span class="hljs-variable">$x</span>, <span class="hljs-variable">$y</span>) {
+  @<span class="hljs-keyword">if</span> unitless(<span class="hljs-variable">$x</span>) {
+    @error <span class="hljs-string">"$x may not be unitless, was #{$x}."</span>;
+  }
+  @<span class="hljs-keyword">if</span> unitless(<span class="hljs-variable">$y</span>) {
+    @error <span class="hljs-string">"$y may not be unitless, was #{$y}."</span>;
+  }
+  <span class="hljs-attribute">position</span>: relative; <span class="hljs-attribute">left</span>: <span class="hljs-variable">$x</span>; <span class="hljs-attribute">top</span>: <span class="hljs-variable">$y</span>;
+}
+
+</code></pre></div><div class="col right"><pre><code>
+</code></pre></div>
+</section>
+
+<section class="description">
+<h2 id="-directives-expressions-">控制指令(Directives)和表达式(Expressions)</h2>
+<h3 id="-if-"><code>if()</code></h3>
+<p><code>if()</code> 是 Sass 中的内置<strong>函数</strong>。</p>
+<p>下面的例子中，第一表达式回返回<code>1px</code>， 而第二个会返回 <code>2px</code>。</p>
+<pre><code class="lang-scss">if(true, 1px, 2px)
+if(false, 1px, 2px)
+</code></pre>
+<h3 id="-if-"><code>@if</code></h3>
+<p><code>@if</code> 指令使用一个 sass 表达式作为参数。如果该表达式的返回 <code>false</code> 或 <code>null</code> 以外的值，则该指令中嵌套的 style 会被使用。比如：</p>
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.with-border</span> {
+  @<span class="hljs-keyword">if</span> 1 + 1 == 2 { <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> solid;  }
+  @<span class="hljs-keyword">if</span> 5 &lt; 3      { <span class="hljs-attribute">border</span>: <span class="hljs-number">2px</span> dotted; }
+  @<span class="hljs-keyword">if</span> null       { <span class="hljs-attribute">border</span>: <span class="hljs-number">3px</span> double; }
+}
+
+</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.with-border</span> {
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> solid;
+}
+
+</code></pre></div>
+</section>
+
+<section class="description">
+
+</section>
+<section class="compare cf">
+  <div class="col left"><pre><code>
+
+<span class="hljs-comment">/*
+ * Maps
+ */</span>
+
+<span class="hljs-variable">$map</span>: (key1: value1, key2: value2, key3: value3);
+
+
+<span class="hljs-comment">/*
+ *  == OPERATIONS ==
+ */</span>
+
+<span class="hljs-comment">/*
+ * Division and /
+ */</span>
+
+division-not-happen {
+  <span class="hljs-attribute">font</span>: <span class="hljs-number">10px</span>/<span class="hljs-number">8px</span>;
+}
+
+division-happen {
+  <span class="hljs-variable">$width</span>: <span class="hljs-number">1000px</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-variable">$width</span>/<span class="hljs-number">2</span>; <span class="hljs-comment">// use a variable, does division</span>
+  <span class="hljs-attribute">line-height</span>: round(<span class="hljs-number">2.3em</span>)/<span class="hljs-number">2</span>; <span class="hljs-comment">//use a function, does division</span>
+  <span class="hljs-attribute">height</span>: (<span class="hljs-number">500px</span>/<span class="hljs-number">2</span>); <span class="hljs-comment">//use parentheses, does division</span>
+  marigin-<span class="hljs-attribute">left</span>: <span class="hljs-number">5px</span> + <span class="hljs-number">8px</span>/<span class="hljs-number">2</span>; <span class="hljs-comment">// use +, does division</span>
+}
+
+
+
+<span class="hljs-comment">/*
+ * - Color Operations -
+ */</span>
+
+<span class="hljs-comment">/*
+ * r,g,b calc seperately
+ */</span>
+<span class="hljs-attribute">color</span>-add {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#010203</span> + <span class="hljs-number">#040506</span>;
+}
+
+<span class="hljs-attribute">color</span>-multiply {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#010203</span> * <span class="hljs-number">2</span>;
+}
+
+<span class="hljs-comment">/*
+ * colors with alpha channel, must have the same alpha value in order for color arithmetic to be done with theme
+ */</span>
+<span class="hljs-attribute">color</span>-with-alpha {
+  <span class="hljs-attribute">color</span>: rgba(<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.75</span>) + rgba(<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.75</span>)
+}
+
+/*
+ * alpha channel if a color can be adjusted using color function: opacify() and transparentize()
+ */
+<span class="hljs-variable">$translucent-red</span>: rgba(<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.5</span>);
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: opacify(<span class="hljs-variable">$translucent-red</span>, <span class="hljs-number">0.3</span>);
+  <span class="hljs-attribute">background-color</span>: transparentize(<span class="hljs-variable">$translucent-red</span>, <span class="hljs-number">0.25</span>);
+}
+
+<span class="hljs-comment">/*
+ * - String operations -
+ */</span>
+
+<span class="hljs-selector-tag">p</span> {
+  cusor: e + -resize;
+}
+
+<span class="hljs-comment">/*
+ * quoted or unquoted depends on the value on the left of "+"
+ */</span>
+quoted-unquoted {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"Foo "</span> + Bar;
+  <span class="hljs-attribute">font-family</span>: sans- + <span class="hljs-string">'serif'</span>;
+}
+
+
+<span class="hljs-comment">/*
+ * Interpolation within the string: # { }
+ */</span>
+
+<span class="hljs-selector-tag">p</span>:before {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"I ate #{5 + 10} pies!"</span>;
+}
+
+
+<span class="hljs-comment">/*
+ * == Parentheses ==
+ */</span>
+
+<span class="hljs-comment">/*
+ * affect the order of operations
+ */</span>
+
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">1em</span> + (<span class="hljs-number">2em</span> * <span class="hljs-number">3</span>);
+}
+
+
+<span class="hljs-comment">/*
+ * == Functions ==
+ */</span>
+<span class="hljs-attribute">color</span>-function {
+  <span class="hljs-attribute">color</span>: hsl(<span class="hljs-number">0</span>, <span class="hljs-number">100%</span>, <span class="hljs-number">50%</span>);
+}
+
+<span class="hljs-comment">/*
+ * keyword arguments
+ */</span>
+function-kw-arg {
+  <span class="hljs-attribute">color</span>: hsl(<span class="hljs-variable">$hue</span>: <span class="hljs-number">0</span>, <span class="hljs-variable">$saturation</span>: <span class="hljs-number">100%</span>, <span class="hljs-variable">$lightness</span>: <span class="hljs-number">50%</span>);
+}
+
+
+<span class="hljs-comment">/*
+ * == Interpolation: # { } ==
+ */</span>
+
+<span class="hljs-comment">/* used in property name */</span>
+
+<span class="hljs-variable">$name</span>: foo;
+<span class="hljs-variable">$attr</span>: border;
+<span class="hljs-selector-tag">p</span>.#{<span class="hljs-variable">$name</span>} {
+  #{<span class="hljs-variable">$attr</span>}-<span class="hljs-attribute">color</span>: blue;
+}
+
+<span class="hljs-comment">/* used in property value */</span>
+<span class="hljs-comment">/* different from a variable, using # { } does mean
+ * that any oprations near it will be treated as
+ * plain CSS
+ */</span>
+
+x {
+  <span class="hljs-variable">$font-size</span>: <span class="hljs-number">12px</span>;
+  <span class="hljs-variable">$line-height</span>: <span class="hljs-number">30px</span>;
+  what-you-want: #{<span class="hljs-variable">$font-size</span>}/#{<span class="hljs-variable">$line-height</span>};
+  not-what-you-want: <span class="hljs-variable">$font-size</span>/<span class="hljs-variable">$line-height</span>;
+}
+
+
+<span class="hljs-comment">/*
+ * == &amp; in SassScript ==
+ */</span>
+<span class="hljs-selector-class">.foo</span><span class="hljs-selector-class">.bar</span> <span class="hljs-selector-class">.baz</span><span class="hljs-selector-class">.bang</span>, <span class="hljs-selector-class">.bip</span><span class="hljs-selector-class">.qux</span> {
+  <span class="hljs-variable">$selector</span>: &amp;;
+}
+
+<span class="hljs-comment">/*
+ * === @-Rules and Directives ===
+ */</span>
+
+<span class="hljs-comment">/*
+ * import
+ */</span>
+
+@<span class="hljs-keyword">import</span> <span class="hljs-string">"part"</span>;
+
+<span class="hljs-comment">/*
+ * Nested import
+ */</span>
+
+<span class="hljs-selector-id">#main</span> {
+  @<span class="hljs-keyword">import</span> <span class="hljs-string">"example"</span>;
+}
+
+
+<span class="hljs-comment">/* @media */</span>
+<span class="hljs-comment">/* It behave as in plain CSS, with one extra capability:
+ * they can be nested in CSS rules.
+ * If a @meida directive appears within a CSS rule,
+ * it will be bubbled up to the top level of the stylesheet
+ */</span>
+
+<span class="hljs-selector-class">.sidebar</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">300px</span>;
+  @<span class="hljs-keyword">media</span> screen and (orientation: landscape) {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+  }
+}
+
+<span class="hljs-variable">$media</span>: screen;
+<span class="hljs-variable">$feature</span>: -webkit-min-device-pixel-ratio;
+<span class="hljs-variable">$value</span>: <span class="hljs-number">1.5</span>;
+
+@<span class="hljs-keyword">media</span> #{<span class="hljs-variable">$media</span>} and (<span class="hljs-variable">$feature</span>: <span class="hljs-variable">$value</span>) {
+  .sidebar {
+    width: <span class="hljs-number">500px</span>;
+  }
+}
+
+
+
+
+<span class="hljs-comment">/*
+ * === Control Directives &amp; Expressions ===
+ */</span>
+
+<span class="hljs-comment">/* @if */</span>
+<span class="hljs-variable">$type</span>: monster;
+<span class="hljs-selector-tag">p</span> {
+  @<span class="hljs-keyword">if</span> <span class="hljs-variable">$type</span> == ocean {
+    <span class="hljs-attribute">color</span>: blue;
+  } @<span class="hljs-keyword">else</span> if <span class="hljs-variable">$type</span> == matador {
+    <span class="hljs-attribute">color</span>: red;
+  } @<span class="hljs-keyword">else</span> if <span class="hljs-variable">$type</span> == monster {
+    <span class="hljs-attribute">color</span>: green;
+  } @<span class="hljs-keyword">else</span> {
+    <span class="hljs-attribute">color</span>: black;
+  }
+}
+
+<span class="hljs-comment">/* @for */</span>
+<span class="hljs-comment">/*
+ * Usage
+ * @for $var from &lt;start&gt; through &lt;end&gt;  // include &lt;start&gt; and &lt;end&gt;
+ * @for $var from &lt;start&gt; to &lt;end&gt;       // include &lt;start&gt; but not &lt;end&gt;
+ * where &lt;start&gt; and &lt;end&gt; must be expressions that return integers
+ */</span>
+
+ @<span class="hljs-keyword">for</span> <span class="hljs-variable">$i</span> from 1 through 3 {
+  <span class="hljs-selector-class">.item-</span>#{<span class="hljs-variable">$i</span>} { <span class="hljs-attribute">width</span>: <span class="hljs-number">2em</span> * <span class="hljs-variable">$i</span>; }
+}
+
+<span class="hljs-comment">/* @each */</span>
+<span class="hljs-comment">/*
+ * Usage
+ * @each $var in &lt;list or map&gt;
+ */</span>
+@<span class="hljs-keyword">each</span> <span class="hljs-variable">$animal</span> in puma, sea-slug, egret, salamander {
+  .#{<span class="hljs-variable">$animal</span>}-<span class="hljs-attribute">icon</span> {
+    <span class="hljs-attribute">background-image</span>: url(<span class="hljs-string">'/images/#{$animal}.png'</span>);
+  }
+}
+
+<span class="hljs-comment">/*
+ * Usage
+ * @each $var1, $var2, ... in &lt;list&gt;
+ * where &lt;list&gt; is a list of lists
+ */</span>
+@<span class="hljs-keyword">each</span> <span class="hljs-variable">$animal</span>, <span class="hljs-variable">$color</span>, <span class="hljs-variable">$cursor</span> in (puma, black, default),
+                                  (sea-slug, blue, pointer),
+                                  (egret, white, move) {
+  .#{<span class="hljs-variable">$animal</span>}-<span class="hljs-attribute">icon</span> {
+    <span class="hljs-attribute">background-image</span>: url(<span class="hljs-string">'/images/#{$animal}.png'</span>);
+    <span class="hljs-attribute">border</span>: <span class="hljs-number">2px</span> solid <span class="hljs-variable">$color</span>;
+    <span class="hljs-attribute">cursor</span>: <span class="hljs-variable">$cursor</span>;
+  }
+}
+
+<span class="hljs-comment">/*
+ * @each - with map
+ */</span>
+@<span class="hljs-keyword">each</span> <span class="hljs-variable">$header</span>, <span class="hljs-variable">$size</span> in (h1: 2em, h2: 1.5em, h3: 1.2em) {
+  #{<span class="hljs-variable">$header</span>} {
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-variable">$size</span>;
+  }
+}
+
+<span class="hljs-comment">/* @while */</span>
+<span class="hljs-variable">$i</span>: <span class="hljs-number">6</span>;
+@<span class="hljs-keyword">while</span> <span class="hljs-variable">$i</span> &gt; 0 {
+  <span class="hljs-selector-class">.item-</span>#{<span class="hljs-variable">$i</span>} { <span class="hljs-attribute">width</span>: <span class="hljs-number">2em</span> * <span class="hljs-variable">$i</span>; }
+  <span class="hljs-variable">$i</span>: <span class="hljs-variable">$i</span> - <span class="hljs-number">2</span>;
+}
+
+<span class="hljs-comment">/*
+ * == Mixin ==
+ */</span>
+
+<span class="hljs-comment">/* define mixin */</span>
+@<span class="hljs-keyword">mixin</span> large-text {
+  <span class="hljs-attribute">font</span>: {
+    family: Arial;
+    size: <span class="hljs-number">20px</span>;
+    weight: bold;
+  }
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#ff0000</span>;
+}
+
+<span class="hljs-comment">/* parent selector reference (&amp;) can be used in mixin */</span>
+@<span class="hljs-keyword">mixin</span> clearfix {
+  <span class="hljs-attribute">display</span>: inline-block;
+  &amp;:after {
+    <span class="hljs-attribute">content</span>: <span class="hljs-string">"."</span>;
+    <span class="hljs-attribute">display</span>: block;
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">0</span>;
+    <span class="hljs-attribute">clear</span>: both;
+    <span class="hljs-attribute">visibility</span>: hidden;
+  }
+  * <span class="hljs-selector-tag">html</span> &amp; { <span class="hljs-attribute">height</span>: <span class="hljs-number">1px</span> }
+}
+
+@mixin silly-links {
+  a {
+    color: blue;
+    <span class="hljs-attribute">background-color</span>: red;
+  }
+}
+
+<span class="hljs-comment">/* use mixin */</span>
+use-large-text {
+  @<span class="hljs-keyword">include</span> large-text;
+  <span class="hljs-attribute">font-style</span>: italic;
+}
+
+<span class="hljs-selector-class">.clearfix</span> {
+  @<span class="hljs-keyword">include</span> clearfix;
+}
+
+<span class="hljs-comment">/* can be used directly */</span>
+@<span class="hljs-keyword">include</span> silly-links;
+
+<span class="hljs-comment">/*
+ * = mixin with arguments =
+ */</span>
+
+<span class="hljs-comment">/* it can contain default value */</span>
+@<span class="hljs-keyword">mixin</span> sexy-border(<span class="hljs-variable">$color</span>, <span class="hljs-variable">$width</span>: 1in) {
+  <span class="hljs-attribute">border</span>: {
+    color: <span class="hljs-variable">$color</span>;
+    <span class="hljs-attribute">width</span>: <span class="hljs-variable">$width</span>;
+    <span class="hljs-selector-tag">style</span>: dashed;
+  }
+}
+
+<span class="hljs-selector-tag">p</span> { @<span class="hljs-keyword">include</span> sexy-border(blue, 1in); }
+<span class="hljs-selector-tag">h1</span> { @<span class="hljs-keyword">include</span> sexy-border(red); }
+
+<span class="hljs-comment">/* you can use keyword arguments */</span>
+<span class="hljs-selector-tag">p</span> { @<span class="hljs-keyword">include</span> sexy-border(<span class="hljs-variable">$width</span>: 2in, <span class="hljs-variable">$color</span>: black); }
+
+<span class="hljs-comment">/* variable arguments / unknown number of arguments */</span>
+@<span class="hljs-keyword">mixin</span> box-shadow(<span class="hljs-variable">$shadows</span>...) {
+  -moz-<span class="hljs-attribute">box-shadow</span>: <span class="hljs-variable">$shadows</span>;
+  -webkit-<span class="hljs-attribute">box-shadow</span>: <span class="hljs-variable">$shadows</span>;
+  <span class="hljs-attribute">box-shadow</span>: <span class="hljs-variable">$shadows</span>;
+}
+<span class="hljs-selector-class">.shadows</span> {
+  @<span class="hljs-keyword">include</span> box-shadow(<span class="hljs-number">0px</span> 4px 5px <span class="hljs-number">#666</span>, 2px 6px 10px <span class="hljs-number">#999</span>);
+}
+
+<span class="hljs-comment">/* list or map variable as variable arguments */</span>
+@<span class="hljs-keyword">mixin</span> colors(<span class="hljs-variable">$text</span>, <span class="hljs-variable">$background</span>, <span class="hljs-variable">$border</span>) {
+  <span class="hljs-attribute">color</span>: <span class="hljs-variable">$text</span>;
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-variable">$background</span>;
+  <span class="hljs-attribute">border-color</span>: <span class="hljs-variable">$border</span>;
+}
+
+<span class="hljs-variable">$values</span>: <span class="hljs-number">#ff0000</span>, <span class="hljs-number">#00ff00</span>, <span class="hljs-number">#0000ff</span>;
+<span class="hljs-selector-class">.primary</span> {
+  @<span class="hljs-keyword">include</span> colors(<span class="hljs-variable">$values</span>...);
+}
+
+<span class="hljs-variable">$value-map</span>: (text: <span class="hljs-number">#00ff00</span>, background: <span class="hljs-number">#0000ff</span>, border: <span class="hljs-number">#ff0000</span>);
+<span class="hljs-selector-class">.secondary</span> {
+  @<span class="hljs-keyword">include</span> colors(<span class="hljs-variable">$value-map</span>...);
+}
+
+<span class="hljs-comment">/* = passing content blocks to a mixin = */</span>
+@<span class="hljs-keyword">mixin</span> apply-to-ie6-only {
+  * <span class="hljs-selector-tag">html</span> {
+    @<span class="hljs-keyword">content</span>;
+  }
+}
+@<span class="hljs-keyword">include</span> apply-to-ie6-only {
+  <span class="hljs-selector-id">#logo</span> {
+    <span class="hljs-attribute">background-image</span>: url(/logo.gif);
+  }
+}
+
+
+<span class="hljs-comment">/*
+ * == Function ==
+ */</span>
+<span class="hljs-variable">$grid-width</span>: <span class="hljs-number">40px</span>;
+<span class="hljs-variable">$gutter-width</span>: <span class="hljs-number">10px</span>;
+
+@function grid-width(<span class="hljs-variable">$n</span>) {
+  @return <span class="hljs-variable">$n</span> * <span class="hljs-variable">$grid-width</span> + (<span class="hljs-variable">$n</span> - 1) * <span class="hljs-variable">$gutter-width</span>;
+}
+
+<span class="hljs-selector-id">#sidebar</span> { <span class="hljs-attribute">width</span>: grid-width(<span class="hljs-number">5</span>); }</code></pre></div><div class="col right"><pre><code>
+<span class="hljs-comment">/*
+ * Maps
+ */</span>
+<span class="hljs-comment">/*
+ *  == OPERATIONS ==
+ */</span>
+<span class="hljs-comment">/*
+ * Division and /
+ */</span>
+<span class="hljs-selector-tag">division-not-happen</span> {
+  <span class="hljs-attribute">font</span>: <span class="hljs-number">10px</span>/<span class="hljs-number">8px</span>;
+}
+
+<span class="hljs-selector-tag">division-happen</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+  <span class="hljs-attribute">line-height</span>: <span class="hljs-number">1em</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">250px</span>;
+  <span class="hljs-attribute">marigin-left</span>: <span class="hljs-number">9px</span>;
+}
+
+<span class="hljs-comment">/*
+ * - Color Operations -
+ */</span>
+<span class="hljs-comment">/*
+ * r,g,b calc seperately
+ */</span>
+<span class="hljs-selector-tag">color-add</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#050709</span>;
+}
+
+<span class="hljs-selector-tag">color-multiply</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#020406</span>;
+}
+
+<span class="hljs-comment">/*
+ * colors with alpha channel, must have the same alpha value in order for color arithmetic to be done with theme
+ */</span>
+<span class="hljs-selector-tag">color-with-alpha</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">rgba</span>(255, 255, 0, 0.75);
+}
+
+<span class="hljs-comment">/*
+ * alpha channel if a color can be adjusted using color function: opacify() and transparentize()
+ */</span>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">rgba</span>(255, 0, 0, 0.8);
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">rgba</span>(255, 0, 0, 0.25);
+}
+
+<span class="hljs-comment">/*
+ * - String operations -
+ */</span>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">cusor</span>: e-resize;
+}
+
+<span class="hljs-comment">/*
+ * quoted or unquoted depends on the value on the left of "+"
+ */</span>
+<span class="hljs-selector-tag">quoted-unquoted</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"Foo Bar"</span>;
+  <span class="hljs-attribute">font-family</span>: sans-serif;
+}
+
+<span class="hljs-comment">/*
+ * Interpolation within the string: # { }
+ */</span>
+<span class="hljs-selector-tag">p</span><span class="hljs-selector-pseudo">:before</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"I ate 15 pies!"</span>;
+}
+
+<span class="hljs-comment">/*
+ * == Parentheses ==
+ */</span>
+<span class="hljs-comment">/*
+ * affect the order of operations
+ */</span>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">7em</span>;
+}
+
+<span class="hljs-comment">/*
+ * == Functions ==
+ */</span>
+<span class="hljs-selector-tag">color-function</span> {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+<span class="hljs-comment">/*
+ * keyword arguments
+ */</span>
+<span class="hljs-selector-tag">function-kw-arg</span> {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+<span class="hljs-comment">/*
+ * == Interpolation: # { } ==
+ */</span>
+<span class="hljs-comment">/* used in property name */</span>
+<span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.foo</span> {
+  <span class="hljs-attribute">border-color</span>: blue;
+}
+
+<span class="hljs-comment">/* used in property value */</span>
+<span class="hljs-comment">/* different from a variable, using # { } does mean
+ * that any oprations near it will be treated as
+ * plain CSS
+ */</span>
+<span class="hljs-selector-tag">x</span> {
+  <span class="hljs-attribute">what-you-want</span>: <span class="hljs-number">12px</span> / <span class="hljs-number">30px</span>;
+  <span class="hljs-attribute">not-what-you-want</span>: <span class="hljs-number">0.4</span>;
+}
+
+<span class="hljs-comment">/*
+ * == &amp; in SassScript ==
+ */</span>
+<span class="hljs-comment">/*
+ * === @-Rules and Directives ===
+ */</span>
+<span class="hljs-comment">/*
+ * import
+ */</span>
+<span class="hljs-comment">/*
+ * FILE &lt;_part.scss&gt;
+ */</span>
+<span class="hljs-comment">/*
+ * Nested import
+ */</span>
+<span class="hljs-selector-id">#main</span> <span class="hljs-selector-class">.example</span> {
+  <span class="hljs-attribute">color</span>: red;
+}
+
+<span class="hljs-comment">/* @media */</span>
+<span class="hljs-comment">/* It behave as in plain CSS, with one extra capability:
+ * they can be nested in CSS rules.
+ * If a @meida directive appears within a CSS rule,
+ * it will be bubbled up to the top level of the stylesheet
+ */</span>
+<span class="hljs-selector-class">.sidebar</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">300px</span>;
+}
+
+@<span class="hljs-keyword">media</span> screen and (orientation: landscape) {
+  <span class="hljs-selector-class">.sidebar</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+  }
+}
+
+@<span class="hljs-keyword">media</span> screen and (-webkit-min-device-pixel-ratio: <span class="hljs-number">1.5</span>) {
+  <span class="hljs-selector-class">.sidebar</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+  }
+}
+
+<span class="hljs-comment">/*
+ * === Control Directives &amp; Expressions ===
+ */</span>
+<span class="hljs-comment">/* @if */</span>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">color</span>: green;
+}
+
+<span class="hljs-comment">/* @for */</span>
+<span class="hljs-comment">/*
+ * Usage
+ * @for $var from &lt;start&gt; through &lt;end&gt;  // include &lt;start&gt; and &lt;end&gt;
+ * @for $var from &lt;start&gt; to &lt;end&gt;       // include &lt;start&gt; but not &lt;end&gt;
+ * where &lt;start&gt; and &lt;end&gt; must be expressions that return integers
+ */</span>
+<span class="hljs-selector-class">.item-1</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">2em</span>;
+}
+
+<span class="hljs-selector-class">.item-2</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">4em</span>;
+}
+
+<span class="hljs-selector-class">.item-3</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">6em</span>;
+}
+
+<span class="hljs-comment">/* @each */</span>
+<span class="hljs-comment">/*
+ * Usage
+ * @each $var in &lt;list or map&gt;
+ */</span>
+<span class="hljs-selector-class">.puma-icon</span> {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">"/images/puma.png"</span>);
+}
+
+<span class="hljs-selector-class">.sea-slug-icon</span> {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">"/images/sea-slug.png"</span>);
+}
+
+<span class="hljs-selector-class">.egret-icon</span> {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">"/images/egret.png"</span>);
+}
+
+<span class="hljs-selector-class">.salamander-icon</span> {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">"/images/salamander.png"</span>);
+}
+
+<span class="hljs-comment">/*
+ * Usage
+ * @each $var1, $var2, ... in &lt;list&gt;
+ * where &lt;list&gt; is a list of lists
+ */</span>
+<span class="hljs-selector-class">.puma-icon</span> {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">"/images/puma.png"</span>);
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">2px</span> solid black;
+  <span class="hljs-attribute">cursor</span>: default;
+}
+
+<span class="hljs-selector-class">.sea-slug-icon</span> {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">"/images/sea-slug.png"</span>);
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">2px</span> solid blue;
+  <span class="hljs-attribute">cursor</span>: pointer;
+}
+
+<span class="hljs-selector-class">.egret-icon</span> {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">"/images/egret.png"</span>);
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">2px</span> solid white;
+  <span class="hljs-attribute">cursor</span>: move;
+}
+
+<span class="hljs-comment">/*
+ * @each - with map
+ */</span>
+<span class="hljs-selector-tag">h1</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">2em</span>;
+}
+
+<span class="hljs-selector-tag">h2</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.5em</span>;
+}
+
+<span class="hljs-selector-tag">h3</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.2em</span>;
+}
+
+<span class="hljs-comment">/* @while */</span>
+<span class="hljs-selector-class">.item-6</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">12em</span>;
+}
+
+<span class="hljs-selector-class">.item-4</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">8em</span>;
+}
+
+<span class="hljs-selector-class">.item-2</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">4em</span>;
+}
+
+<span class="hljs-comment">/*
+ * == Mixin ==
+ */</span>
+<span class="hljs-comment">/* define mixin */</span>
+<span class="hljs-comment">/* parent selector reference (&amp;) can be used in mixin */</span>
+<span class="hljs-comment">/* use mixin */</span>
+<span class="hljs-selector-tag">use-large-text</span> {
+  <span class="hljs-attribute">font-family</span>: Arial;
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">20px</span>;
+  <span class="hljs-attribute">font-weight</span>: bold;
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#ff0000</span>;
+  <span class="hljs-attribute">font-style</span>: italic;
+}
+
+<span class="hljs-selector-class">.clearfix</span> {
+  <span class="hljs-attribute">display</span>: inline-block;
+}
+
+<span class="hljs-selector-class">.clearfix</span><span class="hljs-selector-pseudo">:after</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">"."</span>;
+  <span class="hljs-attribute">display</span>: block;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">clear</span>: both;
+  <span class="hljs-attribute">visibility</span>: hidden;
+}
+
+* <span class="hljs-selector-tag">html</span> <span class="hljs-selector-class">.clearfix</span> {
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">1px</span>;
+}
+
+<span class="hljs-comment">/* can be used directly */</span>
+<span class="hljs-selector-tag">a</span> {
+  <span class="hljs-attribute">color</span>: blue;
+  <span class="hljs-attribute">background-color</span>: red;
+}
+
+<span class="hljs-comment">/*
+ * = mixin with arguments =
+ */</span>
+<span class="hljs-comment">/* it can contain default value */</span>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">border-color</span>: blue;
+  <span class="hljs-attribute">border-width</span>: <span class="hljs-number">1in</span>;
+  <span class="hljs-attribute">border-style</span>: dashed;
+}
+
+<span class="hljs-selector-tag">h1</span> {
+  <span class="hljs-attribute">border-color</span>: red;
+  <span class="hljs-attribute">border-width</span>: <span class="hljs-number">1in</span>;
+  <span class="hljs-attribute">border-style</span>: dashed;
+}
+
+<span class="hljs-comment">/* you can use keyword arguments */</span>
+<span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">border-color</span>: black;
+  <span class="hljs-attribute">border-width</span>: <span class="hljs-number">2in</span>;
+  <span class="hljs-attribute">border-style</span>: dashed;
+}
+
+<span class="hljs-comment">/* variable arguments / unknown number of arguments */</span>
+<span class="hljs-selector-class">.shadows</span> {
+  <span class="hljs-attribute">-moz-box-shadow</span>: <span class="hljs-number">0px</span> <span class="hljs-number">4px</span> <span class="hljs-number">5px</span> <span class="hljs-number">#666</span>, <span class="hljs-number">2px</span> <span class="hljs-number">6px</span> <span class="hljs-number">10px</span> <span class="hljs-number">#999</span>;
+  <span class="hljs-attribute">-webkit-box-shadow</span>: <span class="hljs-number">0px</span> <span class="hljs-number">4px</span> <span class="hljs-number">5px</span> <span class="hljs-number">#666</span>, <span class="hljs-number">2px</span> <span class="hljs-number">6px</span> <span class="hljs-number">10px</span> <span class="hljs-number">#999</span>;
+  <span class="hljs-attribute">box-shadow</span>: <span class="hljs-number">0px</span> <span class="hljs-number">4px</span> <span class="hljs-number">5px</span> <span class="hljs-number">#666</span>, <span class="hljs-number">2px</span> <span class="hljs-number">6px</span> <span class="hljs-number">10px</span> <span class="hljs-number">#999</span>;
+}
+
+<span class="hljs-comment">/* list or map variable as variable arguments */</span>
+<span class="hljs-selector-class">.primary</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#ff0000</span>;
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#00ff00</span>;
+  <span class="hljs-attribute">border-color</span>: <span class="hljs-number">#0000ff</span>;
+}
+
+<span class="hljs-selector-class">.secondary</span> {
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#00ff00</span>;
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#0000ff</span>;
+  <span class="hljs-attribute">border-color</span>: <span class="hljs-number">#ff0000</span>;
+}
+
+<span class="hljs-comment">/* = passing content blocks to a mixin = */</span>
+* <span class="hljs-selector-tag">html</span> <span class="hljs-selector-id">#logo</span> {
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(/logo.gif);
+}
+
+<span class="hljs-comment">/*
+ * == Function ==
+ */</span>
+<span class="hljs-selector-id">#sidebar</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">240px</span>;
+}
+</code></pre></div>
+</section>
+
 </body>
 </html>

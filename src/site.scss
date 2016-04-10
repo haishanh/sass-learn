@@ -1,7 +1,22 @@
+@import "normalize";
+@import "hljs-gist";
+
+$font-mono: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
+
 *,
 *:before,
 *:after {
   box-sizing: border-box;
+}
+
+.cf:before,
+.cf:after {
+  content: " ";
+  display: table;
+}
+
+.cf:after {
+  clear: both;
 }
 
 .description {
@@ -12,6 +27,7 @@
 .compare {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+  background: linear-gradient(90deg, #fff 50%, #f3f3f3 50%);
 }
 
 .col {
@@ -21,6 +37,6 @@
   display: inline-block;
 }
 
-.right {
-  background: #f3f3f3;
+pre > code {
+  font-family: $font-mono;
 }
