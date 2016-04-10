@@ -2,14 +2,22 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     cssbeautify = require('gulp-cssbeautify');
 
-gulp.task('sass', function () {
-  gulp.src('./sass/**/*.scss')
+function sassIt(src, dest) {
+  gulp.src(src)
     .pipe(sass()).on('error', sass.logError)
     .pipe(cssbeautify({
       indent: '  ',
       autosemicolon: true
     }))
-    .pipe(gulp.dest('./css'));;
+    .pipe(gulp.dest(dest));
+}
+
+gulp.task('sass', () => {
+  sassIt('./sass/test.scss', './css');
+});
+
+gulp.task('sitesass', () => {
+  sassIt('./src/**/*.scss', './src');
 });
 
 gulp.task('sass:watch', function () {
