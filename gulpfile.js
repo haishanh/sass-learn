@@ -1,14 +1,11 @@
 var gulp = require('gulp'),
-    sass = require('gulp-sass'),
-    cssbeautify = require('gulp-cssbeautify');
+    sass = require('gulp-sass');
 
 function sassIt(src, dest) {
   gulp.src(src)
-    .pipe(sass()).on('error', sass.logError)
-    .pipe(cssbeautify({
-      indent: '  ',
-      autosemicolon: true
-    }))
+    .pipe(sass({
+      outputStyle: 'expanded'
+    })).on('error', sass.logError)
     .pipe(gulp.dest(dest));
 }
 
