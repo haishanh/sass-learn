@@ -1,6 +1,7 @@
 @import "normalize";
 @import "hljs-gist";
 
+$font-main: "Roboto",-apple-system, BlinkMacSystemFont,"Helvetica Neue","PingFang-SC-Regular","STHeiti", "Helvetica","Arial","Verdana","sans-serif","Microsoft YaHei";
 $font-mono: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
 
 *,
@@ -19,9 +20,18 @@ $font-mono: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida San
   clear: both;
 }
 
+body {
+  font-family: $font-main;
+}
+
 .description {
   width: 800px;
-  margin: 0 auto;
+  margin: 3em auto;
+  h2,
+  h3,
+  h4 {
+    position: relative;
+  }
 }
 
 .compare {
@@ -35,8 +45,48 @@ $font-mono: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida San
   padding: 1em 1.5em;
   //float: left;
   display: inline-block;
+  vertical-align: top;
+}
+
+p {
+  line-height: 1.6em;
+}
+
+li {
+  line-height: 1.8em;
 }
 
 pre > code {
   font-family: $font-mono;
+}
+
+p > code {
+  padding: 0.2em 0.2em;
+  margin: 0;
+  background: rgba(0,0,0,.04);
+  border-radius: 3px;
+  font-size: 85%;
+}
+
+h2 {
+  font-weight: 300;
+  font-size: 2em;
+}
+
+a.anchor {
+  position: absolute;
+  left: -1em;
+  text-decoration: none;
+  font-size: 1.2em;
+  padding-right: 1em;
+  display: none;
+  &:hover {
+    color: red;
+  }
+}
+
+h2:hover, h3:hover, h4:hover {
+  a.anchor {
+    display: inline-block;
+  }
 }
