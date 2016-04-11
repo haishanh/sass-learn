@@ -12,6 +12,24 @@ const OPEN = /\/\*!/g;
 const CLOSE = /!\*\//g;
 const descPat = /\/\*!\s*\n([\s\S]*?)!\*\//;
 
+var renderer = new markdown.Renderer();
+
+renderer.heading = (text, level) => {
+  let escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+
+  return '<h' + level + '><a name="' +
+          escapedText +
+          '" class="anchor" href="#' +
+          escapedText +
+          '">#</a>' +
+          text + '</h' + level + '>';
+};
+
+markdown.setOptions({
+  renderer,
+  highlight: (code) => hljs.highlightAuto(code).value
+});
+
 function parsePoints(data, opt, start) {
 
   let open = opt.open;
