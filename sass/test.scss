@@ -62,7 +62,6 @@ Sass 允许 CSS 规则进行嵌套。
 /*!
 在内部 selector 中，可以使用 `&` 符号来引用 父级 selector。比如：
 !*/
-
 a {
   color: blue;
   &:hover {
@@ -76,7 +75,6 @@ a {
     font-size: 1.8em;
   }
 }
-
 /*!
 ### CSS 属性嵌套(Nested Properties)
 
@@ -639,6 +637,33 @@ p.with-border {
 }
 
 /*!
+`@if` 指令后面可以再接多个 `@else if` 语句，或者一个 `@else` 语句。比如：
+!*/
+$type: monster;
+p.colorful {
+  @if $type == ocean {
+    color: blue;
+  } @else if $type == matador {
+    color: red;
+  } @else if $type == monster {
+    color: green;
+  } @else {
+    color: black;
+  }
+}
+/*!
+### `@for`
+
+`@for` 指令用于构建 for 循环语句。
+
+语法:
+
+ 1. `@for $var from <start> through <end>`
+ 2. `@for $var from <start> to <end>`
+
+其中 `$var` 被称为 counter，当然你也可以写成 `$i` 或 `$j`。 而 `<start>` 和 `<end>` 都必须是可以返回整数的 Sass 表达式。 如果 `<start>` 比 `<end>` 大，则 `$var` 会进行递减而不是递增。
+
+使用第1种语法，使用 `through`，则循环的时候 `$var` 的值会从 `<start>` 每次加1一直到 `<end>`(包含`<end>`)，。而使用第2种语法，使用 `to`，循环时`$var` 也是从 `<start>` 逐次加1直到 `<end>`，但不会包含 `<end>` 本身。
 !*/
 
 /*
