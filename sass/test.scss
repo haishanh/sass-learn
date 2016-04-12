@@ -654,7 +654,7 @@ p.colorful {
 /*!
 ### `@for`
 
-`@for` 指令用于构建 for 循环语句。
+`@for` 指令用于构建循环语句。
 
 语法:
 
@@ -663,51 +663,255 @@ p.colorful {
 
 其中 `$var` 被称为 counter，当然你也可以写成 `$i` 或 `$j`。 而 `<start>` 和 `<end>` 都必须是可以返回整数的 Sass 表达式。 如果 `<start>` 比 `<end>` 大，则 `$var` 会进行递减而不是递增。
 
-使用第1种语法，使用 `through`，则循环的时候 `$var` 的值会从 `<start>` 每次加1一直到 `<end>`(包含`<end>`)，。而使用第2种语法，使用 `to`，循环时`$var` 也是从 `<start>` 逐次加1直到 `<end>`，但不会包含 `<end>` 本身。
+使用第1种语法，使用 `through`，则循环的时候 `$var` 的值会从 `<start>` 每次加1一直到 `<end>`(包含`<end>`)，。而使用第2种语法，使用 `to`，循环时 `$var` 也是从 `<start>` 逐次加1直到 `<end>`，但不会包含 `<end>` 本身。
+!*/
+@for $i from 1 through 3 {
+  .item-#{$i} { width: 2em * $i; }
+}
+/*!
+### `@each`
+
+`@each` 指令也用于构建循环语句。
+
+语法：
+
+ `@each $var in <list or map>`
+
+其中 `<list or map>` 必须是 list 或者 map 或者是可以返回 list 或 map 的 Sass 表达式。
+
+在循环的过程中 `$var` 的值会被设为 list 或 map 中的各项。
+
+例子：
+!*/
+@each $animal in puma, sea-slug, egret, salamander {
+  .#{$animal}-icon {
+    background-image: url('/images/#{$animal}.png');
+  }
+}
+
+/*!
+`@each` 也可以使用多个 counter。
+
+语法：
+
+`@each $var1, $var2, ... in <list>`
+
+其中 `<list>` 是一个**包含多个列表的列表**。
+
+例如：
+!*/
+@each $animal, $color, $cursor in (puma, black, default),
+                                  (sea-slug, blue, pointer),
+                                  (egret, white, move) {
+  .#{$animal}-icon {
+    background-image: url('/images/#{$animal}.png');
+    border: 2px solid $color;
+    cursor: $cursor;
+  }
+}
+/*!
+使用 map 的话是这样的。
+!*/
+@each $header, $size in (h1: 2em, h2: 1.5em, h3: 1.2em) {
+  #{$header} {
+    font-size: $size;
+  }
+}
+/*!
+### `@while`循环
+
+用法：
+
+```
+@while <expression> {
+  ...
+}
+```
+
+`@while` 循环会一直到表达式 `<expression>` 的值为 `false` 时才停止。
+!*/
+$i: 6;
+@while $i > 0 {
+  .item-#{$i} { width: 2em * $i; }
+  $i: $i - 2;
+}
+/*!
+## `@mixin`
+
+**mixin** 可以用来定义可重用的 CSS style。 mixin 可以接收参数，这可以让我们获得更灵活的 style。
+
+### 定义和使用 mixin
+
+指令 `@mixin` 可以定义一个 mixin，指令 `@include` 可以用来使用一个 mixin。
+
+下面的例子定义并使用了一个叫 `large-text` 的 mixin：
+!*/
+/* 定义 mixin */
+@mixin large-text {
+  font: {
+    family: Arial;
+    size: 20px;
+    weight: bold;
+  }
+  color: #ff0000;
+}
+
+/* 使用 mixin */
+.page-title {
+  @include large-text;
+  padding: 4px;
+  margin-top: 10px;
+}
+/*!
+在 mixin 中，也可以包含 selector，也可以使用 `&` 符号来引用父级 selector。
+
+比如：
+!*/
+@mixin clearfix {
+  display: inline-block;
+  &:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+  * html & { height: 1px }
+}
+/*!
+mixin 也可以直接用在顶层(不在任何 selector rule 中)。比如：
+!*/
+@mixin silly-links {
+  a {
+    color: blue;
+    background-color: red;
+  }
+}
+
+@include silly-links;
+/*!
+定义 mixin 的时候，也可以使用其他 mixin：
+!*/
+@mixin compound {
+  @include highlighted-background;
+  @include header-text;
+}
+
+@mixin highlighted-background { background-color: #fc0; }
+@mixin header-text { font-size: 20px; }
+
+h2.highlight {
+  @include compound;
+}
+/*!
+### 带参数的 mixin
+
+#### 定义和使用带参数的 mixin
+
+例子：
+!*/
+@mixin sexy-border($color, $width) {
+  border: {
+    color: $color;
+    width: $width;
+    style: dashed;
+  }
+}
+
+p { @include sexy-border(blue, 1in); }
+/*!
+也可以使用默认变量，所谓默认变量就是在定义是给了默认值的变量。使用这个 mixin 的时候，如果没有给这个变量传参数，则会使用定义时的默认值。例如：
+!*/
+@mixin sexy-border($color, $width: 1in) {
+  border: {
+    color: $color;
+    width: $width;
+    style: dashed;
+  }
+}
+p { @include sexy-border(blue); }
+h1 { @include sexy-border(blue, 2in); }
+/*!
+#### 使用关键字参数
+
+在使用 mixin 的时候，我们也可以把传入的参数写成 键值对 的形式。这样可以让代码明确已读，而且使用的时候也不用在意传参的顺序。
+!*/
+p {
+  @include sexy-border($color: blue);
+}
+
+h1 {
+  @include sexy-border( $width: 2in, $color: blue);
+}
+
+/*!
+#### 不定参数
+
+有时我们希望使用非固定数量的参数 mixin。 比如 `box-shadow` 可以接受多个 shadow 样式作为参数， 对于这种情况就要使用 不定参数 的 mixin。 在定义这种 mixin 的时候，可以在参数列表的最后一个参数后面加上`...`，这时这个参数就会变成不定参数。比如：
+!*/
+@mixin box-shadow($shadows...) {
+  -moz-box-shadow: $shadows;
+  -webkit-box-shadow: $shadows;
+  box-shadow: $shadows;
+}
+
+.shadows {
+  @include box-shadow(0px 4px 5px #666, 2px 6px 10px #999);
+}
+/*!
+在调用 mixin 的时候，也可以使用不定参数。
+
+其实就是对 list 和 map 进行展开。下面例子分别展示了使用 list 和 map ：
+!*/
+@mixin colors($text, $background, $border) {
+  color: $text;
+  background-color: $background;
+  border-color: $border;
+}
+
+$values: #ff0000, #00ff00, #0000ff;
+.primary {
+  @include colors($values...);
+}
+
+$value-map: (text: #00ff00, background: #0000ff, border: #ff0000);
+.secondary {
+  @include colors($value-map...);
+}
+/*!
+你也可以同时 list 和 map 展开，只要你在调用的时候，把 list 放在 map 前面。
+
+你可以使用 不定参数 重新封装一个 mixin，这样你可以在不改变这个原 mixin 的情况下，添加额外的  style。 比如：
+!*/
+@mixin stylish-mixin($color, $width) {
+  color: $color;
+  width: $width;
+}
+
+@mixin wrapped-stylish-mixin($args...) {
+  font-weight: bold;
+  @include stylish-mixin($args...);
+}
+
+.stylish {
+  // The $width argument will get passed on to "stylish-mixin" as a keyword
+  @include wrapped-stylish-mixin(#00ff00, $width: 100px);
+}
+
+/*!
+===
 !*/
 
-/*
- * Maps
- */
-
-$map: (key1: value1, key2: value2, key3: value3);
-
-
-/*
- *  == OPERATIONS ==
- */
-
-/*
- * Division and /
- */
-
-division-not-happen {
-  font: 10px/8px;
+/* = passing content blocks to a mixin = */
+@mixin apply-to-ie6-only {
+  * html {
+    @content;
+  }
 }
-
-division-happen {
-  $width: 1000px;
-  width: $width/2; // use a variable, does division
-  line-height: round(2.3em)/2; //use a function, does division
-  height: (500px/2); //use parentheses, does division
-  marigin-left: 5px + 8px/2; // use +, does division
-}
-
-
-
-/*
- * - Color Operations -
- */
-
-/*
- * r,g,b calc seperately
- */
-color-add {
-  color: #010203 + #040506;
-}
-
-color-multiply {
-  color: #010203 * 2;
+@include apply-to-ie6-only {
+  #logo {
+    background-image: url(/logo.gif);
+  }
 }
 
 /*
@@ -726,43 +930,6 @@ p {
   background-color: transparentize($translucent-red, 0.25);
 }
 
-/*
- * - String operations -
- */
-
-p {
-  cusor: e + -resize;
-}
-
-/*
- * quoted or unquoted depends on the value on the left of "+"
- */
-quoted-unquoted {
-  content: "Foo " + Bar;
-  font-family: sans- + 'serif';
-}
-
-
-/*
- * Interpolation within the string: # { }
- */
-
-p:before {
-  content: "I ate #{5 + 10} pies!";
-}
-
-
-/*
- * == Parentheses ==
- */
-
-/*
- * affect the order of operations
- */
-
-p {
-  width: 1em + (2em * 3);
-}
 
 
 /*
@@ -780,261 +947,9 @@ function-kw-arg {
 }
 
 
-/*
- * == Interpolation: # { } ==
- */
-
-/* used in property name */
-
-$name: foo;
-$attr: border;
-p.#{$name} {
-  #{$attr}-color: blue;
-}
-
-/* used in property value */
-/* different from a variable, using # { } does mean
- * that any oprations near it will be treated as
- * plain CSS
- */
-
-x {
-  $font-size: 12px;
-  $line-height: 30px;
-  what-you-want: #{$font-size}/#{$line-height};
-  not-what-you-want: $font-size/$line-height;
-}
-
-
-/*
- * == & in SassScript ==
- */
-.foo.bar .baz.bang, .bip.qux {
-  $selector: &;
-}
-
-/*
- * === @-Rules and Directives ===
- */
-
-/*
- * import
- */
-
-@import "part";
-
-/*
- * Nested import
- */
-
-#main {
-  @import "example";
-}
-
-
-/* @media */
-/* It behave as in plain CSS, with one extra capability:
- * they can be nested in CSS rules.
- * If a @meida directive appears within a CSS rule,
- * it will be bubbled up to the top level of the stylesheet
- */
-
-.sidebar {
-  width: 300px;
-  @media screen and (orientation: landscape) {
-    width: 500px;
-  }
-}
-
-$media: screen;
-$feature: -webkit-min-device-pixel-ratio;
-$value: 1.5;
-
-@media #{$media} and ($feature: $value) {
-  .sidebar {
-    width: 500px;
-  }
-}
 
 
 
-
-/*
- * === Control Directives & Expressions ===
- */
-
-/* @if */
-$type: monster;
-p {
-  @if $type == ocean {
-    color: blue;
-  } @else if $type == matador {
-    color: red;
-  } @else if $type == monster {
-    color: green;
-  } @else {
-    color: black;
-  }
-}
-
-/* @for */
-/*
- * Usage
- * @for $var from <start> through <end>  // include <start> and <end>
- * @for $var from <start> to <end>       // include <start> but not <end>
- * where <start> and <end> must be expressions that return integers
- */
-
- @for $i from 1 through 3 {
-  .item-#{$i} { width: 2em * $i; }
-}
-
-/* @each */
-/*
- * Usage
- * @each $var in <list or map>
- */
-@each $animal in puma, sea-slug, egret, salamander {
-  .#{$animal}-icon {
-    background-image: url('/images/#{$animal}.png');
-  }
-}
-
-/*
- * Usage
- * @each $var1, $var2, ... in <list>
- * where <list> is a list of lists
- */
-@each $animal, $color, $cursor in (puma, black, default),
-                                  (sea-slug, blue, pointer),
-                                  (egret, white, move) {
-  .#{$animal}-icon {
-    background-image: url('/images/#{$animal}.png');
-    border: 2px solid $color;
-    cursor: $cursor;
-  }
-}
-
-/*
- * @each - with map
- */
-@each $header, $size in (h1: 2em, h2: 1.5em, h3: 1.2em) {
-  #{$header} {
-    font-size: $size;
-  }
-}
-
-/* @while */
-$i: 6;
-@while $i > 0 {
-  .item-#{$i} { width: 2em * $i; }
-  $i: $i - 2;
-}
-
-/*
- * == Mixin ==
- */
-
-/* define mixin */
-@mixin large-text {
-  font: {
-    family: Arial;
-    size: 20px;
-    weight: bold;
-  }
-  color: #ff0000;
-}
-
-/* parent selector reference (&) can be used in mixin */
-@mixin clearfix {
-  display: inline-block;
-  &:after {
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
-  }
-  * html & { height: 1px }
-}
-
-@mixin silly-links {
-  a {
-    color: blue;
-    background-color: red;
-  }
-}
-
-/* use mixin */
-use-large-text {
-  @include large-text;
-  font-style: italic;
-}
-
-.clearfix {
-  @include clearfix;
-}
-
-/* can be used directly */
-@include silly-links;
-
-/*
- * = mixin with arguments =
- */
-
-/* it can contain default value */
-@mixin sexy-border($color, $width: 1in) {
-  border: {
-    color: $color;
-    width: $width;
-    style: dashed;
-  }
-}
-
-p { @include sexy-border(blue, 1in); }
-h1 { @include sexy-border(red); }
-
-/* you can use keyword arguments */
-p { @include sexy-border($width: 2in, $color: black); }
-
-/* variable arguments / unknown number of arguments */
-@mixin box-shadow($shadows...) {
-  -moz-box-shadow: $shadows;
-  -webkit-box-shadow: $shadows;
-  box-shadow: $shadows;
-}
-.shadows {
-  @include box-shadow(0px 4px 5px #666, 2px 6px 10px #999);
-}
-
-/* list or map variable as variable arguments */
-@mixin colors($text, $background, $border) {
-  color: $text;
-  background-color: $background;
-  border-color: $border;
-}
-
-$values: #ff0000, #00ff00, #0000ff;
-.primary {
-  @include colors($values...);
-}
-
-$value-map: (text: #00ff00, background: #0000ff, border: #ff0000);
-.secondary {
-  @include colors($value-map...);
-}
-
-/* = passing content blocks to a mixin = */
-@mixin apply-to-ie6-only {
-  * html {
-    @content;
-  }
-}
-@include apply-to-ie6-only {
-  #logo {
-    background-image: url(/logo.gif);
-  }
-}
 
 
 /*
@@ -1048,3 +963,15 @@ $gutter-width: 10px;
 }
 
 #sidebar { width: grid-width(5); }
+
+
+/*
+ * Maps
+ */
+
+$map: (key1: value1, key2: value2, key3: value3);
+
+
+/*
+ *  == OPERATIONS ==
+ */
