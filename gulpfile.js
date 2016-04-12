@@ -1,5 +1,5 @@
-var gulp = require('gulp'),
-    sass = require('gulp-sass');
+const gulp = require('gulp'),
+      sass = require('gulp-sass');
 
 function sassIt(src, dest) {
   gulp.src(src)
@@ -17,7 +17,7 @@ gulp.task('sitesass', () => {
   sassIt('./src/**/*.scss', './src');
 });
 
-gulp.task('sass:watch', function () {
+gulp.task('sass:watch', () => {
   gulp.watch('./sass/**/*.scss', ['sass'])
 });
 
