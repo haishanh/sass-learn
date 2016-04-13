@@ -1,4 +1,16 @@
 /*!
+本文的内容主要来自于 Sass 的[文档][sass-doc]，但并不是对其进行直接翻译，根据自己的理解对其进行了一些增减和修改。同时通过对比式的排版，也更容易看清楚 Sass 到 CSS 之间的转换。
+
+[sass-doc]: http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+
+## 基本概念
+
+通过下图可以了解 CSS 语法中的一些名词。本文提及这些名词时，也会直接用其英文名称。
+
+![css-syntax][css-syntax]
+
+[css-syntax]: http://carlog.qiniudn.com/css-syntax-dark.png
+
 ## Sass 是什么
 
 Sass 是 Syntactically Awesome StyleSheets 的缩写，它在原生 CSS 语法的基础上，提供了很多额外的功能，比如变量，规则嵌套， mixin 等等，并且完全兼容 CSS 的原有语法。Sass 的存在，让写 CSS 变的简单和有趣。
@@ -13,15 +25,13 @@ Sass 有两种语法。一种是 **SCSS**(Sassy CSS)，它是对CSS 原有语法
 
 ```js
 var gulp = require('gulp'),
-    sass = require('gulp-sass'),
+    sass = require('gulp-sass');
 
 gulp.task('sass', () => {
   gulp.src('*.scss')
-    .pipe(sass()).on('error', sass.logError)
-    .pipe(cssbeautify({
-      indent: '  ',
-      autosemicolon: true
-    }))
+    .pipe(sass({
+      outputStyle: 'expanded'
+    })).on('error', sass.logError)
     .pipe(gulp.dest('dist'));
 });
 
@@ -146,15 +156,15 @@ Sass 变量也是有作用域的。比如：
 
 Sass 支持7中数据类型：
 
-  - 数字(numbers)，比如1.2, 12, 10px
-  - 包含引号和不包含引号的字符串(strings of text)，比如"foo", 'bar', baz
-  - 颜色(colors)，比如 `blue`, `#04a3f9`, `rgba(255, 0, 0, 0.5)`
-  - 布尔值(booleans)，包含 `true`, `false`
-  - 空值(nulls)，即`null`
-  - 空格或逗号隔开的列表(lists of values)，比如`1.5em 1em 0 2em`, `Helvetica, Arial, sans-serif`
-  - 键值对映射(maps)，比如 `(key1: value1, key2: value2)`
+  - 数字(*numbers*)，比如`1.2`,`12`,`10px`
+  - 包含引号和不包含引号的字符串(*strings of text*)，比如`"foo"`, `'bar'`, `baz`
+  - 颜色(*colors*)，比如 `blue`, `#04a3f9`, `rgba(255, 0, 0, 0.5)`
+  - 布尔值(*booleans*)，包含 `true`, `false`
+  - 空值(*nulls*)，即`null`
+  - 空格或逗号隔开的列表(*lists of values*)，比如`1.5em 1em 0 2em`, `Helvetica, Arial, sans-serif`
+  - 键值对映射(*maps*)，比如 `(key1: value1, key2: value2)`
 
-**通常**，Sass 转换成 CSS 的时候，字符串会保留原来的样子，即如果在 Sass 只有引号，则 CSS  中一会有引号，Sass 中没有引号，则 CSS 中不会有引号。
+**通常**，Sass 转换成 CSS 的时候，字符串会保留原来的样子，即如果在 Sass 有引号，则生成的 CSS  中也会有引号，Sass 中没有引号，则 CSS 中也不会有引号。
 
 TODO interpolation
 
@@ -289,7 +299,7 @@ p {
 
 Sass 中定义了一些有用的函数，完整的函数列表[在这][func-list]。
 
-[func-list]； http://sass-lang.com/documentation/Sass/Script/Functions.html
+[func-list]: http://sass-lang.com/documentation/Sass/Script/Functions.html
 
 Sass 函数调用的方式和 CSS 函数一致：
 !*/
@@ -894,15 +904,18 @@ $value-map: (text: #00ff00, background: #0000ff, border: #ff0000);
 }
 
 .stylish {
-  // The $width argument will get passed on to "stylish-mixin" as a keyword
+  // 参数 $witdh 会被作为关键字参数传给 "stylish-mixin"
   @include wrapped-stylish-mixin(#00ff00, $width: 100px);
 }
 
 /*!
-===
+#### 整个 block 内容作为 mixin 参数
+
+在 mixin 定义中，可以使用指令 `@content` 来获取这个 block 的内容。在一个 mixin 中 `@content` 也可以多次使用。
+
+比如：
 !*/
 
-/* = passing content blocks to a mixin = */
 @mixin apply-to-ie6-only {
   * html {
     @content;
@@ -914,9 +927,28 @@ $value-map: (text: #00ff00, background: #0000ff, border: #ff0000);
   }
 }
 
-/*
+/*!
+要注意，传给 mixin 的 block 会使用它定义时的作用域，而不是 mixin 的内部作用域。下面的例子中，`@content` 在转换的时候，变量 `$color` 和 `size` 并不会使用 mixin 自己 local 的 `$color` 和 `size` 变量，而是原 block 定义时所在作用域的相应变量。
+!*/
+
+$color: white;
+@mixin colors($color: blue, $size: 200px) {
+  background-color: $color;
+  @content;
+  border-color: $color;
+  width: $size;
+}
+.colors {
+  $size: 1em;
+  @include colors {
+    color: $color;
+    font-size: $size;
+  }
+}
+
+/*!
  * colors with alpha channel, must have the same alpha value in order for color arithmetic to be done with theme
- */
+ !*/
 color-with-alpha {
   color: rgba(255, 0, 0, 0.75) + rgba(0, 255, 0, 0.75)
 }
