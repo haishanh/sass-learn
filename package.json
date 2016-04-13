@@ -4,7 +4,8 @@
   "description": "",
   "main": "gulpfile.js",
   "scripts": {
-    "run": "gulp sitesass && gulp sass && node index.js",
+    "build": "gulp sitesass && gulp sass && node index.js",
+    "bld": "gulp sitesass && gulp sass && node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

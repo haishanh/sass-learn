@@ -68,6 +68,10 @@ body {
 
 p {
   line-height: 1.6em;
+  img {
+    width: 120%;
+    margin: 0 -10%;
+  }
 }
 
 li {
@@ -78,7 +82,8 @@ pre > code {
   font-family: $font-mono;
 }
 
-p > code {
+p > code,
+li > code {
   padding: 0.2em 0.2em;
   margin: 0 2px;
   background: rgba(0,0,0,.04);
