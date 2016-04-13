@@ -3,6 +3,8 @@
 
 $font-main: "Roboto",-apple-system, BlinkMacSystemFont,"Helvetica Neue","PingFang-SC-Regular","STHeiti", "Helvetica","Arial","Verdana","sans-serif","Microsoft YaHei";
 $font-mono: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
+$red: #e91363;
+$green: #009688;
 
 *,
 *:before,
@@ -26,26 +28,42 @@ body {
 
 .description {
   width: 800px;
-  margin: 3em auto;
+  margin: 4em auto;
   h2,
   h3,
   h4 {
     position: relative;
+    color: #e91363;
+  }
+  pre {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 15px 15px;
   }
 }
 
 .compare {
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px dashed #dadada;
+  border-bottom: 1px dashed #dadada;
   background: linear-gradient(90deg, #fff 50%, #f3f3f3 50%);
 }
 
 .col {
   width: 50%;
   padding: 1em 1.5em;
+  position: relative;
   //float: left;
   display: inline-block;
   vertical-align: top;
+}
+
+.type {
+  position: absolute;
+  top: 0px;
+  left: 5px;
+  font-size: 1.3em;
+  font-style: italic;
+  color: #ccc;
 }
 
 p {
@@ -77,6 +95,7 @@ h2 {
 a.anchor {
   position: absolute;
   left: -1em;
+  color: $green;
   text-decoration: none;
   font-size: 1.2em;
   padding-right: 1em;
@@ -89,5 +108,18 @@ a.anchor {
 h2:hover, h3:hover, h4:hover {
   a.anchor {
     display: inline-block;
+  }
+}
+
+p, li {
+    a {
+    text-decoration: none;
+    color: $green;
+    transition: all 0.4s ease-in;
+    &:hover {
+      color: #fff;
+      background: $green;
+      border-radius: 5px;
+    }
   }
 }
