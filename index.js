@@ -4,6 +4,7 @@ const ejs = require('ejs');
 const fs = require('fs');
 const markdown = require('marked');
 const hljs = require('highlight.js');
+const _ = require('lodash');
 
 
 const templateFile = 'src/template.html';
@@ -12,12 +13,21 @@ const OPEN = /\/\*!/g;
 const CLOSE = /!\*\//g;
 const descPat = /\/\*!\s*\n([\s\S]*?)!\*\//;
 
+// global
+var headings = [];
 var renderer = new markdown.Renderer();
 
 renderer.heading = (text, level) => {
   let escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
 
-  return '<h' + level + '><a name="' +
+  headings.push({
+    level,
+    text: '<a name="' + escapedText + '" href="#' + escapedText + '">' +
+          text + '</a>' 
+  });
+
+  return '<h' + level + ' id="' +
+          escapedText + '"' + '><a name="' +
           escapedText +
           '" class="anchor" href="#' +
           escapedText +
@@ -29,6 +39,46 @@ markdown.setOptions({
   renderer,
   highlight: (code) => hljs.highlightAuto(code).value
 });
+
+function genToc(headings, n) {
+  n = n || 3; 
+  let pre = 1;
+  let closeTags = [];
+  let out = '';
+  let hl = _(headings);
+  hl
+    .filter((h) => {
+      return h.level <= n;
+    })
+    .map((h) => {
+      let dif = h.level - pre;
+      pre = h.level;
+      if (dif > 0) {
+        for(let i = 0; i < dif; i++) {
+          out += '<ul><li>';
+          closeTags.push('</li></ul>');
+        }
+      } else if (dif < 0) {
+        dif = - dif;
+        for(let i = 0; i < dif; i++) {
+          out += closeTags.pop();
+        }
+        out += '</li><li>';
+      } else {
+        out += '</li><li>';
+      }
+
+      out += h.text;
+    })
+    .value();
+
+  /* in case there is none closed tag */
+  closeTags.forEach((tag) => {
+    out += tag;
+  });
+
+  return out;
+}
 
 function parsePoints(data, opt, start) {
 
@@ -132,7 +182,8 @@ function populateData() {
     data.push(one);
   }
   return {
-    contents: data
+    contents: data,
+    toc: genToc(headings, 5)
   };
 }
 
