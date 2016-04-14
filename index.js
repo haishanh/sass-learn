@@ -18,12 +18,23 @@ var headings = [];
 var renderer = new markdown.Renderer();
 
 renderer.heading = (text, level) => {
-  let escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+  let sepIndex = text.indexOf('|');
+  let content;
+  let id;
+  if (sepIndex > 0) {
+    content = text.substring(0, sepIndex-1);
+    id = text.substring(sepIndex+2);
+  } else {
+    content = text;
+    id = text;
+  }
+
+  let escapedText = id.toLowerCase().replace(/[^\w]+/g, '-');
 
   headings.push({
     level,
     text: '<a name="' + escapedText + '" href="#' + escapedText + '">' +
-          text + '</a>' 
+          content + '</a>'
   });
 
   return '<h' + level + ' id="' +
@@ -32,7 +43,7 @@ renderer.heading = (text, level) => {
           '" class="anchor" href="#' +
           escapedText +
           '">#</a>' +
-          text + '</h' + level + '>';
+          content + '</h' + level + '>';
 };
 
 markdown.setOptions({
@@ -41,7 +52,7 @@ markdown.setOptions({
 });
 
 function genToc(headings, n) {
-  n = n || 3; 
+  n = n || 3;
   let pre = 1;
   let closeTags = [];
   let out = '';
