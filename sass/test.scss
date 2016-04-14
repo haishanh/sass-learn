@@ -3,7 +3,7 @@
 
 [sass-doc]: http://sass-lang.com/documentation/file.SASS_REFERENCE.html
 
-## 基本概念
+## 基本概念 | basic concept
 
 通过下图可以了解 CSS 语法中的一些名词。本文提及这些名词时，也会直接用其英文名称。
 
@@ -11,17 +11,21 @@
 
 [css-syntax]: http://carlog.qiniudn.com/css-syntax-dark.png
 
-## Sass 是什么
+## Sass 是什么 | what is sass
 
-Sass 是 Syntactically Awesome StyleSheets 的缩写，它在原生 CSS 语法的基础上，提供了很多额外的功能，比如变量，规则嵌套， mixin 等等，并且完全兼容 CSS 的原有语法。Sass 的存在，让写 CSS 变的简单和有趣。
+Sass 是 Syntactically Awesome StyleSheets 的缩写，它在原生 CSS 语法的基础上，提供了很多额外的功能，比如**变量**，**规则嵌套**， **mixin** 等等，并且完全兼容 CSS 的原有语法。Sass 的存在，让写 CSS 变的简单和有趣。
 
 Sass 有两种语法。一种是 **SCSS**(Sassy CSS)，它是对CSS 原有语法的扩展，也就是说一个 CSS 文件，也是一个有效的 SCSS 文件。使用这种语法的文件通常使用`.scss`作为扩展名。本文主要以 SCSS 为主。
 
 还有一种是 **缩进式**语法(直接叫Sass)，其语法简洁，使用代码的缩进，代替大括号，来表示 CSS selector 的层级嵌套关系。每条规则后的分号，也被省略去。使用这种语法的文件通常使用`.sass`作为扩展名。
 
-## 使用 Sass
+## 使用 Sass | using sass
 
-### 使用 Gulp
+### 使用 Gulp 插件 | using gulp plugin
+
+这里是一个使用 [`gulp-sass`][gulp-sass] 插件的例子。
+
+[gulp-sass]: https://www.npmjs.com/package/gulp-sass
 
 ```js
 var gulp = require('gulp'),
@@ -38,11 +42,11 @@ gulp.task('sass', () => {
 gulp.task('default', ['sass']);
 ```
 
-## 基本语法
+## 基本语法 | basic syntax
 
-### 规则嵌套(Nested Rules)
+### 规则嵌套(Nested Rules) | nested rules
 
-Sass 允许 CSS 规则进行嵌套。
+Sass 允许 CSS 规则进行嵌套。这可能是 Sass 最常用的功能了。
 
 !*/
 
@@ -70,7 +74,7 @@ Sass 允许 CSS 规则进行嵌套。
 }
 
 /*!
-在内部 selector 中，可以使用 `&` 符号来引用 父级 selector。比如：
+在 selector 内部，可以使用 `&` 符号来引用 父级 selector。比如：
 !*/
 a {
   color: blue;
@@ -86,7 +90,7 @@ a {
   }
 }
 /*!
-### CSS 属性嵌套(Nested Properties)
+### CSS 属性嵌套(Nested Properties) | nested properties
 
 CSS 中有一些属性存在于「命名空间」中，比如`font-family`, `font-size`, `font-weight` 都存在于 `font` 这个命名空间中。对于类似这样的属性，Sass 提供了一种快捷写法。注意下面例子中`font`后面的冒号：
 !*/
@@ -104,9 +108,11 @@ CSS 中有一些属性存在于「命名空间」中，比如`font-family`, `fon
 }
 
 /*!
-## 代码注释
+## 代码注释 | code comments
 
-Sass 支持标准 CSS 中的多行注释，另外也支持 单行注释。要注意，在默认情况下生成的 CSS 中，多行注释会被保留，单行注释会被去除。
+Sass 支持标准 CSS 中的多行注释，另外也支持 单行注释。
+
+注意，在默认情况下生成的 CSS 中，多行注释会被保留，单行注释会被去除。
 !*/
 
 /*
@@ -124,9 +130,11 @@ a {
 }
 
 /*!
-## 变量
+## 变量 | variables
 
-Sass 中可以使用变量。定义变量就像写 CSS 规则一样，只是前面要加上美元符号(`$`)。仔细对于下面的 Sass 及其 CSS 输出。
+Sass 中可以使用变量。定义变量就像写 CSS 规则一样，只是前面要加上美元符号(`$`)。使用变量的时候，也是在变量名前面加上 `$`。
+
+仔细对比下面的 Sass 及其 CSS 输出。
 !*/
 
 $width: 5em;
@@ -136,7 +144,7 @@ $width: 5em;
 }
 
 /*!
-### 作用域
+### 作用域 | variable scope
 
 Sass 变量也是有作用域的。比如：
 !*/
@@ -152,9 +160,9 @@ Sass 变量也是有作用域的。比如：
 }
 
 /*!
-### 数据类型
+### 数据类型 | data types
 
-Sass 支持7中数据类型：
+Sass 支持7种数据类型：
 
   - 数字(*numbers*)，比如`1.2`,`12`,`10px`
   - 包含引号和不包含引号的字符串(*strings of text*)，比如`"foo"`, `'bar'`, `baz`
@@ -168,16 +176,62 @@ Sass 支持7中数据类型：
 
 TODO interpolation
 
+#### 列表(List)  | list
 
-### 运算
+在下面例子中，`10px 15px 0 0` 和 `Helvetica, Arial, sans-serif` 就是一个 Sass 列表。Sass 列表由空格或逗号隔开。
 
-#### 数字运算
+```scss
+.demo {
+  margin: 10px 15px 0 0;
+  font-face: Helvetica, Arial, sans-serif;
+}
+```
 
-Sass 支持标准的算术运算，加`+`，减`-`，乘`*`，除`/`和 模`%`。 注意，Sass 在进行算术运算的时候会保留单位，所以你也不应该不兼容的单位放在一起运算（比如把使用`px`为单位的数字和使用`em`为单位的数字作加法）。相同单位的两个数相乘也会出现平方单位（`10px * 10px = 100px * px`），而`px * px`并不是一个合法的 CSS 单位。
+通常使用 [Sass 列表函数][sass-list-func]来操作列表。比如说我们可以用 [`nth()`][nth]函数来获取列表中得指定序号的值：
+
+[sass-list-func]: http://sass-lang.com/documentation/Sass/Script/Functions.html#list-functions
+[nth]: http://sass-lang.com/documentation/Sass/Script/Functions.html#nth-instance_method
+
+!*/
+
+$margin: 10px 20px 30px 10px;
+
+.list-func-demo {
+  margin-bottom: nth($margin, 3);
+}
+
+/*!
+列表中除了可以包含简单的数字或字符串外，也可以包含其他列表。比如 `1px 2px, 5px 6px` 就是一个包含2个元素的列表，这2个元素又分别是列表 `1px 2px` 和列表 `5px 6px`。
+
+假设内外列表都是用的时空格或逗号时，可以使用小括号来区分开，比如 `(1px 2px) (5px 6px)`。
+
+需要了解的是，CSS 中并没有使用小括号区分列表的语法。所以 `(1px 2px) (5px 6px)` 装换成 CSS 的时候，会变成 `1px 2px 5px 6px`。
+
+#### 键值对映射(Maps) | maps
+
+下面的例子就是 Map：
+
+```scss
+$hello: (key1: value1, key2: value2, key3: value3);
+```
+
+与 list 不同的是，map 外面总是有小括号，并且其中的键值对总是用逗号隔开。其中的键和值都可以是任意 sass 对象。
+
+与 list 相同的是，map 大部分时候也是用 [sass 的map相关的函数][map-func]来操作。
+
+任何使用 list 的地方也可以使用 map。比如`(key1: value1, key2: value2)`可以被当作是2层列表 `key1 value1, key2 value2`。
+
+[map-func]: http://sass-lang.com/documentation/Sass/Script/Functions.html#map-functions
+
+### 运算 | operations
+
+#### 数字运算 | number operations
+
+Sass 支持标准的算术运算，加`+`，减`-`，乘`*`，除`/` 和 模`%`。 注意，Sass 在进行算术运算的时候会保留单位，所以你也不应该将不兼容的单位放在一起运算（比如把使用`px`为单位的数字和使用`em`为单位的数字作加法）。相同单位的两个数相乘也会出现平方单位（`10px * 10px = 100px * px`），而`px * px`并不是一个合法的 CSS 单位。
 
 比较运算符`<`, `>`, `<=`, `>=`也可以用于 Sass 中的数字。 等于和不等于运算符 `==`, `!=`则适用于 Sass 所有数据类型。
 
-##### 除法和`/`
+#### 除法和 `/` | division and slash
 
 **注意**，因为在有些 CSS 属性中也会有符号`/`，所以在 Sass 中除法运算符`/`会有两种不同的作用。默认情况下，`/`符号会当作字面字符串，而不是除法运算符。然而，有以下3种特殊情况，`/`会被当做除法运算符。
 
@@ -198,12 +252,23 @@ p {
 }
 
 /*!
-##### 减法，负数和`-`
+#### 减法，负数和 `-` | substraction and dash
 
-符号 `-` 在 CSS 和 Sass 可能意味着减法符号(比如`5px - 3px`)，一个负数(比如`-3px`)，或者是一个属性名的一部分(比如`font-weight`)。TODO
+符号 `-` 在 CSS 和 Sass 可能意味着减法符号(比如`5px - 3px`)，一个负数(比如`-3px`)，或者是一个属性名的一部分(比如`font-weight`)。大部分时候，应该很容易区分其作用，但有时却会比较麻烦。以下是一些比较保险的规则：
 
+ * 在做减法的时候 `-` 符号两边要放置空格，比如 `5px - 3px`
+ * 在作取负操作的时候 `-` 符号前面要放置空格，而符号后面不要放空格 比如 ` -3px`, ` -$var`
+ * 如果是 list 中元素的取负操作，则一定要用小括号括起来，比如 `10px (-$var)`
 
-#### 颜色值的运算
+在解释 `-` 作何作用的时候，按以下顺序：
+
+ 1. `-` 作为识别符(identifier)的一部分的时候，比如 `a-1` 会当作不带引号的字符串。唯一例外的是单位后面的 `-`，比如 `5px-3px` 相当于 `5px - 3px`，也就是减法。
+ 2. `-` 在2个数字之间，中间没有空格。会被当做减法，所以 `1-2` 相当于 `1 - 2`
+ 3. `-` 在1个数字**字面值**前。会被当做负号。比如 `1 -2` 会被当做一个包含 `1` 和 `-2` 的 list
+ 4. `-` 在2个数字(包括数字变量)之间，无论是否有空格。也会被当做减法。比如 `1 -$var` 相当于 `1 - $var`
+ 5. 一个**值**前的 `-`，会被当做负号
+
+#### 颜色值的运算 | color operations
 
 所有的算术运算也都可以用于颜色值，只是要注意运算时是rgb分开进行计算的。比如下面的例子中，计算会被分成`01 + 04 = 05`, `02 + 05 = 07` 以及 `03 + 06 = 09`:
 !*/
@@ -214,9 +279,11 @@ p {
 }
 
 /*!
-通常适用 颜色函数(color functions) TODO 来进行颜色的操作。
+通常使用[颜色函数(color functions)][color-func]来进行颜色的操作。
 
-颜色值 和 数字值 之间也是可以进行算术运算的，比如下面的例子中，计算会被分成`01 * 2 = 02`, `02 * 2 = 04` 以及 `03 * 2 = 06`：
+颜色值 和 数字值 之间也是可以进行算术运算的，比如下面的例子中，计算会被分成`01 * 2 = 02`, `02 * 2 = 04` 以及 `03 * 2 = 06`:
+
+[color-func]: http://sass-lang.com/documentation/Sass/Script/Functions.html
 !*/
 
 p {
@@ -237,7 +304,7 @@ p {
 [opa]: http://sass-lang.com/documentation/Sass/Script/Functions.html#opacify-instance_method
 [trans]: http://sass-lang.com/documentation/Sass/Script/Functions.html#transparentize-instance_method
 
-#### 字符串运算
+#### 字符串运算 - string operations
 
 加号 `+`，可以用来连接字符串：
 !*/
@@ -275,17 +342,17 @@ p:before {
 }
 
 /*!
-#### 布尔值运算
+#### 布尔值运算 | boolean operations
 
 对于布尔值，Sass中可以使用运算符 `and`, `or` 以及 `not`。
 
-#### list运算
+#### list运算 | list operations
 
 通常适用 [list 函数][list-func]来进行 list 的操作。
 
 [list-func]: http://sass-lang.com/documentation/Sass/Script/Functions.html#list-functions
 
-#### 小括号
+#### 小括号 | parentheses
 
 和其他语言一样，小括号可以用来预想运算的顺序：
 !*/
@@ -295,7 +362,7 @@ p {
 }
 
 /*!
-## 函数(Functions)
+## 函数(Functions) | functions
 
 Sass 中定义了一些有用的函数，完整的函数列表[在这][func-list]。
 
@@ -309,7 +376,7 @@ p {
 }
 
 /*!
-### 关键字参数
+### 关键字参数 | keyword arguments
 
 Sass 在调用时可以使用关键词参数，使用关键词参数可以提高易读性。同时也不用在意参数顺序。比如上面的例子可以写成：
 !*/
@@ -319,7 +386,7 @@ p {
 }
 
 /*!
-### 插入 `#{xxx}`
+### 插入 `#{xxx}` | interpolation
 
 property 和 selector 都可以使用`#{xxx}`的方式来插入：
 !*/
@@ -341,11 +408,7 @@ p {
 }
 
 /*!
-### Sass 中的 `&` 符号
-
-TODO
-
-### 变量默认值
+### 变量默认值 | variable defaults
 
 在进行变量赋值时，在*值*后加上 `!default` 表示如果这个变量已经被赋值了，则不进行重复赋值；如果该变量还没有值，则进行赋值。
 !*/
@@ -371,9 +434,9 @@ $content: "Non-null content" !default;
 }
 
 /*!
-## `@` 规则 和 指令
+## `@` 规则 和 指令 | @-rules and directives
 
-### `@import`
+### `@import` | import
 
 Sass 扩展了 CSS 的 `@import` 功能，在 Sass 文件中可以 import 其他 SCSS 和 Sass 文件。被 import 的文件中的 变量 和 mixin 都可以在主文件中直接使用。
 
@@ -406,7 +469,7 @@ a {
 /*!
 `@import "foo", "bar";` 可以同时 import 文件 `foo` 和 `bar`。
 
-#### 部分(Partials)
+#### 部分(Partials) | partials
 
 当一个目录中又多个 Sass 文件时，很多时候我们并不希望把所有这些文件都编译成一个单独的 CSS 文件，这时可以给不用编译成单独 CSS 文件的 Sass 文件的文件名前面加上下划线`_`。在 import 这样的文件的时候，我们并**不**需要加上下划线。
 
@@ -417,7 +480,7 @@ a {
 @import "bar";
 
 /*!
-#### 嵌套(Nested) `@import`
+#### 嵌套(Nested) `@import` | nested import
 
 我们可以在 CSS rule 或 `@media` rule 中进行`@import`。 要注意的是，CSS selector 也会嵌套。
 
@@ -438,7 +501,7 @@ a {
 }
 
 /*!
-### `@media`
+### `@media` | media
 
 Sass 中的 `@media` 的功能和 CSS 中的类似，但在 Sass 中 `@media` 可以被嵌套在 CSS rule中。如果 `@media` 嵌套在 CSS rule 中，则作用时它会自动冒泡到顶层。比如：
 !*/
@@ -477,7 +540,7 @@ $value: 1.5;
 }
 
 /*!
-### `@extend`
+### `@extend` | extend
 
 `@extend` 指令可以用来继承另一个 selector 的样式。比如：
 !*/
@@ -530,7 +593,7 @@ a:hover {
 }
 
 /*!
-#### 只用于 `@extend` 的 selector
+#### 只用于 `@extend` 的 selector | extend-only selectors
 
 使用 `%` 可以定义一个只用于 extened 的 selector，它相当于占位(placeholder) selector。这样的 selector 及其 rule 不会直接生成到 CSS 中。在定义时，相当于把符号 `%` 用到可以用在符号 `#` 和符号 `.` 的位置。比如：
 !*/
@@ -554,7 +617,7 @@ a:hover {
 }
 
 /*!
-### `@at-root`
+### `@at-root` | at-root
 
 `@at-root` 可以让原本嵌套在其他 selector 中的 selector 置于顶层。比如：
 !*/
@@ -571,7 +634,7 @@ a:hover {
 }
 
 /*!
-### `@debug`
+### `@debug` | debug
 
 `@debug` 可以将 Sass 表达式的值打印到标准错误。可以方便的进行 debug。比如：
 
@@ -585,7 +648,7 @@ a:hover {
 Line 1 DEBUG: 22em
 ```
 
-### `@warn`
+### `@warn` | warn
 
 `@warn` 也可以将 Sass表达式的值打印到标准错误。`@warn` 和 `@debug` 的区别在于，`@warn`在 CLI 选项 `--quiet` 或 Sass 选项 `:quiet`进行关闭，另外 `@warn` 中打印的消息也会包含 warning 的地方。
 
@@ -607,7 +670,7 @@ Line 1 DEBUG: 22em
 
 
 /*!
-### `@error`
+### `@error` | error
 
 `@error` 用来抛出一个错误，其中也会伴随相应的 stack trace。很适合用来对 *mixins* 和 *函数* 中的参数进行合法性验证。比如：
 !*/
@@ -625,7 +688,7 @@ Line 1 DEBUG: 22em
 /*!
 ## 控制指令(Directives)和表达式(Expressions)
 
-### `if()`
+### `if()` | if function
 
 `if()` 是 Sass 中的内置**函数**。
 
@@ -635,7 +698,7 @@ if(true, 1px, 2px)
 if(false, 1px, 2px)
 ```
 
-### `@if`
+### `@if` | if directive
 
 `@if` 指令使用一个 sass 表达式作为参数。如果该表达式的返回 `false` 或 `null` 以外的值，则该指令中嵌套的 style 会被使用。比如：
 !*/
@@ -662,7 +725,7 @@ p.colorful {
   }
 }
 /*!
-### `@for`
+### `@for` | for directive
 
 `@for` 指令用于构建循环语句。
 
@@ -679,7 +742,7 @@ p.colorful {
   .item-#{$i} { width: 2em * $i; }
 }
 /*!
-### `@each`
+### `@each` | each directive
 
 `@each` 指令也用于构建循环语句。
 
@@ -728,7 +791,7 @@ p.colorful {
   }
 }
 /*!
-### `@while`循环
+### `@while`循环 | while loop
 
 用法：
 
@@ -746,11 +809,11 @@ $i: 6;
   $i: $i - 2;
 }
 /*!
-## `@mixin`
+## `@mixin` | mixin
 
 **mixin** 可以用来定义可重用的 CSS style。 mixin 可以接收参数，这可以让我们获得更灵活的 style。
 
-### 定义和使用 mixin
+### 定义和使用 mixin | defining and including a mixin
 
 指令 `@mixin` 可以定义一个 mixin，指令 `@include` 可以用来使用一个 mixin。
 
@@ -814,9 +877,9 @@ h2.highlight {
   @include compound;
 }
 /*!
-### 带参数的 mixin
+### 带参数的 mixin | mixin with arguments
 
-#### 定义和使用带参数的 mixin
+#### 定义和使用带参数的 mixin | defining and using mixin with arguments
 
 例子：
 !*/
@@ -842,7 +905,7 @@ p { @include sexy-border(blue, 1in); }
 p { @include sexy-border(blue); }
 h1 { @include sexy-border(blue, 2in); }
 /*!
-#### 使用关键字参数
+#### 使用关键字参数 | using keyword argument
 
 在使用 mixin 的时候，我们也可以把传入的参数写成 键值对 的形式。这样可以让代码明确已读，而且使用的时候也不用在意传参的顺序。
 !*/
@@ -855,7 +918,7 @@ h1 {
 }
 
 /*!
-#### 不定参数
+#### 不定参数 | variable arguments
 
 有时我们希望使用非固定数量的参数 mixin。 比如 `box-shadow` 可以接受多个 shadow 样式作为参数， 对于这种情况就要使用 不定参数 的 mixin。 在定义这种 mixin 的时候，可以在参数列表的最后一个参数后面加上`...`，这时这个参数就会变成不定参数。比如：
 !*/
@@ -909,7 +972,7 @@ $value-map: (text: #00ff00, background: #0000ff, border: #ff0000);
 }
 
 /*!
-#### 整个 block 内容作为 mixin 参数
+#### 整个 block 内容作为 mixin 参数 | passing content blocks to a mixin
 
 在 mixin 定义中，可以使用指令 `@content` 来获取这个 block 的内容。在一个 mixin 中 `@content` 也可以多次使用。
 
@@ -947,6 +1010,32 @@ $color: white;
 }
 
 /*!
+## 函数 Function | function
+
+`@function` 指令用来定义个 function，在 function 定义中使用 `@return` 指令来返回一个值。
+
+在调用 function 时，并不需要 `@include` 指令。而且也可以使用关键字参数。
+!*/
+$grid-width: 40px;
+$gutter-width: 10px;
+
+@function grid-width($n) {
+  @return $n * $grid-width + ($n - 1) * $gutter-width;
+}
+
+#sidebar { width: grid-width(5); }
+
+#sidebar_2 { width: grid-width($n: 10); }
+
+/*!
+### Sass 内置函数 | sass built-in functions
+
+完整的内置函数列表和用法，[点此][sass-function]。
+
+[sass-function]: http://sass-lang.com/documentation/Sass/Script/Functions.html
+!*/
+
+/*!
  * colors with alpha channel, must have the same alpha value in order for color arithmetic to be done with theme
  !*/
 color-with-alpha {
@@ -961,49 +1050,3 @@ p {
   color: opacify($translucent-red, 0.3);
   background-color: transparentize($translucent-red, 0.25);
 }
-
-
-
-/*
- * == Functions ==
- */
-color-function {
-  color: hsl(0, 100%, 50%);
-}
-
-/*
- * keyword arguments
- */
-function-kw-arg {
-  color: hsl($hue: 0, $saturation: 100%, $lightness: 50%);
-}
-
-
-
-
-
-
-
-/*
- * == Function ==
- */
-$grid-width: 40px;
-$gutter-width: 10px;
-
-@function grid-width($n) {
-  @return $n * $grid-width + ($n - 1) * $gutter-width;
-}
-
-#sidebar { width: grid-width(5); }
-
-
-/*
- * Maps
- */
-
-$map: (key1: value1, key2: value2, key3: value3);
-
-
-/*
- *  == OPERATIONS ==
- */
