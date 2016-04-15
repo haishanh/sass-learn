@@ -190,8 +190,8 @@ function parseFile(file) {
 
 function populateData() {
   let data = [];
-  let parsedBefore = parseFile('sass/test.scss');
-  let parsedAfter = parseFile('css/test.css');
+  let parsedBefore = parseFile('sass/content.scss');
+  let parsedAfter = parseFile('css/content.css');
 
   for(let i = 0; i < parsedBefore.descArr.length; i++) {
     let one = {};

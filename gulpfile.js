@@ -10,7 +10,7 @@ function sassIt(src, dest) {
 }
 
 gulp.task('sass', () => {
-  sassIt('./sass/test.scss', './css');
+  sassIt('./sass/content.scss', './css');
 });
 
 gulp.task('sitesass', () => {
