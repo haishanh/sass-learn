@@ -24,11 +24,13 @@ $green: #009688;
 
 body {
   font-family: $font-main;
+  background: #efede4;
 }
 
 .description {
   width: 800px;
-  margin: 4em auto;
+  margin: 0 auto;
+  padding: 3em 2em;
   h2,
   h3,
   h4 {
@@ -43,8 +45,8 @@ body {
 }
 
 .compare {
-  border-top: 1px dashed #dadada;
-  border-bottom: 1px dashed #dadada;
+  border-top: 1px solid #dadada;
+  border-bottom: 1px solid #dadada;
   background: linear-gradient(90deg, #fff 50%, #f3f3f3 50%);
 }
 
@@ -94,19 +96,28 @@ li > code {
 
 h2 {
   font-weight: 300;
-  font-size: 2em;
+  font-size: 2.3em;
+}
+
+h3 {
+  font-weight: 300;
+  font-size: 1.6em;
+}
+
+h4 {
+  font-size: 1.2em;
 }
 
 a.anchor {
-  position: absolute;
-  left: -1em;
-  color: $green;
+  // position: absolute;
+  // left: -1em;
+  color: $red;
   text-decoration: none;
   font-size: 1.2em;
-  padding-right: 1em;
-  display: none;
+  padding-right: 10px;
+  // display: none;
   &:hover {
-    color: red;
+    color: $green;
   }
 }
 
@@ -126,5 +137,56 @@ p, li {
       background: $green;
       border-radius: 5px;
     }
+  }
+}
+
+.toc {
+  .left, .right {
+    //display: inline-block;
+    float: left;
+    width: 50%;
+  }
+  .title {
+    text-align: center;
+  }
+  ul {
+    list-style: none;
+    padding-left: 25px;
+    a {
+      color: $green;
+    }
+  }
+  position: fixed;
+  background: #ddfbfb;
+  z-index: 1;
+  height: 100%;
+  top: 0;
+  padding: 0 20px;
+  border-left: 5px solid #00bcd4;
+  box-shadow: 5px 2px 40px 5px #ccc;
+  transition: all .4s ease-out;
+  // display: none;
+  margin-left: -999px;
+  &.show {
+    // display: block;
+    margin-left: 0;
+  }
+}
+
+.tocbtn {
+  position: fixed;
+  right: 4%;
+  bottom: 4%;
+  padding: 5px;
+  text-decoration: none;
+  border-radius: 5px;
+  border: 1px solid #000;
+  color: #333;
+  z-index: 2;
+  background: none;
+  &:hover {
+    color: #fff;
+    border-color: #fff;
+    background: $red;
   }
 }
