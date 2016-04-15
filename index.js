@@ -197,10 +197,9 @@ function populateData() {
     let one = {};
     let left = parsedBefore.codeArr[i].trim();
     let right = parsedAfter.codeArr[i].trim();
-    console.log(left.length, right.length);
     one.description = markdown(parsedBefore.descArr[i]);
-    one.left = '<div class="type">scss</div><pre><code>' + hljs.highlight('scss', left).value + '</code></pre>';
-    one.right = '<div class="type">css</div><pre><code>' + hljs.highlight('css', right).value + '</code></pre>';
+    one.left = hljs.highlight('scss', left).value;
+    one.right = hljs.highlight('css', right).value;
 
     data.push(one);
   }

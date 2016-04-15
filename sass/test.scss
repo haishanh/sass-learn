@@ -1,6 +1,7 @@
 /*!
 本文的内容主要来自于 [*Sass* 的文档][sass-doc]，但并不是对其进行直接翻译，根据自己的理解对其进行了一些增减和修改。同时通过对比式的排版，也更容易看清楚 *Sass* 到 *CSS* 之间的转换。
 
+
 [sass-doc]: http://sass-lang.com/documentation/file.SASS_REFERENCE.html
 
 ## 基本概念 | basic concept
@@ -346,7 +347,7 @@ p:before {
 
 对于布尔值，Sass中可以使用运算符 `and`, `or` 以及 `not`。
 
-#### list运算 | list operations
+#### list 运算 | list operations
 
 通常适用 [list 函数][list-func]来进行 list 的操作。
 
@@ -359,30 +360,6 @@ p:before {
 
 p {
   width: 1em + (2em * 3);
-}
-
-/*!
-## 函数(Functions) | functions
-
-Sass 中定义了一些有用的函数，完整的函数列表[在这][func-list]。
-
-[func-list]: http://sass-lang.com/documentation/Sass/Script/Functions.html
-
-Sass 函数调用的方式和 CSS 函数一致：
-!*/
-
-p {
-  color: hsl(0, 100%, 50%);
-}
-
-/*!
-### 关键字参数 | keyword arguments
-
-Sass 在调用时可以使用关键词参数，使用关键词参数可以提高易读性。同时也不用在意参数顺序。比如上面的例子可以写成：
-!*/
-
-p {
-  color: hsl($hue: 0, $lightness: 50%, $saturation: 100%);
 }
 
 /*!
@@ -1010,7 +987,7 @@ $color: white;
 }
 
 /*!
-## 函数 Function | function
+## 函数(Functions) | functions
 
 `@function` 指令用来定义个 function，在 function 定义中使用 `@return` 指令来返回一个值。
 
@@ -1027,10 +1004,27 @@ $gutter-width: 10px;
 
 #sidebar_2 { width: grid-width($n: 10); }
 
+
 /*!
 ### Sass 内置函数 | sass built-in functions
 
-完整的内置函数列表和用法，[点此][sass-function]。
+Sass 中定义了一些有用的函数，完整的函数列表[在这][func-list]。
 
-[sass-function]: http://sass-lang.com/documentation/Sass/Script/Functions.html
+[func-list]: http://sass-lang.com/documentation/Sass/Script/Functions.html
+
+比如这里调用操作颜色的函数 `hsl()`：
 !*/
+
+p {
+  color: hsl(0, 100%, 50%);
+}
+
+/*!
+### 关键字参数 | keyword arguments
+
+Sass 在调用时可以使用关键词参数，使用关键词参数可以提高易读性。同时也不用在意参数顺序。比如上面的例子可以写成：
+!*/
+
+p {
+  color: hsl($hue: 0, $lightness: 50%, $saturation: 100%);
+}

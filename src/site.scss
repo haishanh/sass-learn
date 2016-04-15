@@ -1,10 +1,12 @@
 @import "normalize";
 @import "hljs-gist";
 
-$font-main: "Roboto",-apple-system, BlinkMacSystemFont,"Helvetica Neue","PingFang-SC-Regular","STHeiti", "Helvetica","Arial","Verdana","sans-serif","Microsoft YaHei";
+$font-main: "Roboto", "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB", "Source Han Sans CN", "Source Han Sans SC", "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
 $font-mono: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
-$red: #e91363;
+// $red: #e91363;
+$red: #CF649A;
 $green: #009688;
+$complementary: #78AB26;
 
 *,
 *:before,
@@ -35,10 +37,10 @@ body {
   h3,
   h4 {
     position: relative;
-    color: #e91363;
+    color: $red;
   }
   pre {
-    border: 1px solid #eee;
+    border: 1px solid $complementary;
     border-radius: 5px;
     padding: 15px 15px;
   }
@@ -164,9 +166,9 @@ p, li {
   ul {
     list-style: none;
     padding-left: 25px;
-    a {
-      color: $green;
-    }
+    //a {
+    //  color: $green;
+    //}
   }
   @at-root {
     body {
@@ -212,3 +214,45 @@ p, li {
     background: $red;
   }
 }
+
+// < header
+header {
+  text-align: center;
+  nav {
+    list-style: none;
+    li {
+      display: inline;
+    }
+  }
+  a {
+    text-decoration: none;
+  }
+  .home-link {
+    color: #333;
+  }
+  h1 {
+    font-weight: 300;
+    font-size: 2.5em;
+  }
+  .sass-logo {
+    path {
+      stroke-width: 5px;
+      stroke: #fff;
+    }
+  }
+}
+// > header
+
+// > footer
+footer {
+  text-align: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  color: #666;
+  &:hover {
+    .love {
+      color: red;
+    }
+  }
+}
+// < footer
