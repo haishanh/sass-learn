@@ -9,9 +9,12 @@
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
-<div class="toc">
-  <%- toc %>
+<div class="toc cf">
+  <h2 class="title">Table of Contents</h2>
+  <div class="left"><%- toc.left %></div>
+  <div class="right"><%- toc.right %></div>
 </div>
+<a class="tocbtn" href="javascript:void(0)">TOC</a>
 <% contents.forEach( function(content) { %>
 <section class="description">
 <%- content.description %>
@@ -21,4 +24,5 @@
 </section>
 <% }); %>
 </body>
+<script src="script.js"></script>
 </html>
