@@ -146,6 +146,13 @@ p, li {
     float: left;
     width: 50%;
   }
+  .content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 600px;
+  }
   .title {
     text-align: center;
   }
@@ -156,20 +163,28 @@ p, li {
       color: $green;
     }
   }
-  position: fixed;
+  @at-root {
+    body {
+      position: relative;
+    }
+  }
+  position: absolute;
   background: #ddfbfb;
   z-index: 1;
-  height: 100%;
+  width: 100%;
   top: 0;
   padding: 0 20px;
   border-left: 5px solid #00bcd4;
-  box-shadow: 5px 2px 40px 5px #ccc;
+
   transition: all .4s ease-out;
   // display: none;
-  margin-left: -999px;
+  // margin-left: -999px;
+  left: -100%;
   &.show {
     // display: block;
-    margin-left: 0;
+    // margin-left: 0;
+    left: 0;
+    box-shadow: 5px 2px 40px 5px #ccc;
   }
 }
 

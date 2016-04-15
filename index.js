@@ -59,6 +59,7 @@ markdown.setOptions({
 function genToc(headings, n) {
   n = n || 3;
   let pre = 1;
+  let topLevel = 2;
   let closeTags = [];
   let out = '';
   let hl = _(headings);
@@ -69,7 +70,13 @@ function genToc(headings, n) {
     .map((h) => {
       let dif = h.level - pre;
       pre = h.level;
-      if (dif > 0) {
+      if (h.level === topLevel) {
+        closeTags.forEach((tag) => {
+         out += tag;
+        });
+        out += '<ul class="top-level"><li>';
+        closeTags.push('</li></ul>');
+      } else if (dif > 0) {
         for(let i = 0; i < dif; i++) {
           out += '<ul><li>';
           closeTags.push('</li></ul>');
@@ -198,19 +205,19 @@ function populateData() {
     data.push(one);
   }
 
-  let breakPoint = 0;
-  for (breakPoint = 0; breakPoint < headings.length; breakPoint++) {
-    if(headings[breakPoint].colBreak) break;
-  }
+  // let breakPoint = 0;
+  // for (breakPoint = 0; breakPoint < headings.length; breakPoint++) {
+  //   if(headings[breakPoint].colBreak) break;
+  // }
 
-  let toc = {
-    left: genToc(headings.slice(0, breakPoint), 5),
-    right: genToc(headings.slice(breakPoint), 5),
-  };
-  console.log(breakPoint);
+  // let toc = {
+  //   left: genToc(headings.slice(0, breakPoint), 5),
+  //   right: genToc(headings.slice(breakPoint), 5),
+  // };
+  // console.log(breakPoint);
   return {
     contents: data,
-    toc
+    toc: genToc(headings, 5)
   };
 }
 

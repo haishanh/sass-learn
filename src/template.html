@@ -11,8 +11,13 @@
 <body>
 <div class="toc cf">
   <h2 class="title">Table of Contents</h2>
+  <!--
   <div class="left"><%- toc.left %></div>
   <div class="right"><%- toc.right %></div>
+  -->
+  <div class="content">
+    <%- toc %>
+  </div>
 </div>
 <a class="tocbtn" href="javascript:void(0)">TOC</a>
 <% contents.forEach( function(content) { %>
