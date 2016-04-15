@@ -20,19 +20,24 @@ var renderer = new markdown.Renderer();
 renderer.heading = (text, level) => {
   let sepIndex = text.indexOf('|');
   let content;
+  let colBreak = false;
   let id;
   if (sepIndex > 0) {
-    content = text.substring(0, sepIndex-1);
-    id = text.substring(sepIndex+2);
+    content = text.substring(0, sepIndex).trim();
+    id = text.substring(sepIndex+1).trim();
   } else {
     content = text;
     id = text;
+  }
+  if (id == "at-rules and directives") {
+    colBreak = true;
   }
 
   let escapedText = id.toLowerCase().replace(/[^\w]+/g, '-');
 
   headings.push({
     level,
+    colBreak,
     text: '<a name="' + escapedText + '" href="#' + escapedText + '">' +
           content + '</a>'
   });
@@ -192,9 +197,20 @@ function populateData() {
 
     data.push(one);
   }
+
+  let breakPoint = 0;
+  for (breakPoint = 0; breakPoint < headings.length; breakPoint++) {
+    if(headings[breakPoint].colBreak) break;
+  }
+
+  let toc = {
+    left: genToc(headings.slice(0, breakPoint), 5),
+    right: genToc(headings.slice(breakPoint), 5),
+  };
+  console.log(breakPoint);
   return {
     contents: data,
-    toc: genToc(headings, 5)
+    toc
   };
 }
 
