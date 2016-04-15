@@ -13,12 +13,19 @@ gulp.task('sass', () => {
   sassIt('./sass/content.scss', './css');
 });
 
+gulp.task('res', () => {
+  return gulp.src('./src/**/*.js')
+    .pipe(gulp.dest('./dist'));
+});
+
 gulp.task('sitesass', () => {
-  sassIt('./src/**/*.scss', './src');
+  sassIt('./src/**/*.scss', './dist');
 });
 
 gulp.task('sass:watch', () => {
   gulp.watch('./sass/**/*.scss', ['sass'])
 });
+
+gulp.task('dist', ['sitesass', 'res']);
 
 gulp.task('default', ['sass', 'sass:watch']);

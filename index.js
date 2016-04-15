@@ -8,6 +8,7 @@ const _ = require('lodash');
 
 const sassIn = 'sass/content.scss';
 const sassOut = 'css/content.css';
+const htmlOut = 'dist/index.html';
 const templateFile = 'src/template.html';
 const template = fs.readFileSync(templateFile, 'utf-8');
 const OPEN = /\/\*!/g;
@@ -219,4 +220,4 @@ function populateData() {
 const data = populateData();
 
 var ret = ejs.render(template, data);
-fs.writeFileSync('src/index.html', ret);
+fs.writeFileSync(htmlOut, ret);
