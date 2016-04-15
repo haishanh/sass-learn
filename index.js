@@ -6,7 +6,8 @@ const markdown = require('marked');
 const hljs = require('highlight.js');
 const _ = require('lodash');
 
-
+const sassIn = 'sass/content.scss';
+const sassOut = 'css/content.css';
 const templateFile = 'src/template.html';
 const template = fs.readFileSync(templateFile, 'utf-8');
 const OPEN = /\/\*!/g;
@@ -17,6 +18,9 @@ const descPat = /\/\*!\s*\n([\s\S]*?)!\*\//;
 var headings = [];
 var renderer = new markdown.Renderer();
 
+/**
+ * overwrite default heading renderer of `marked`
+ */
 renderer.heading = (text, level) => {
   let sepIndex = text.indexOf('|');
   let content;
@@ -38,7 +42,8 @@ renderer.heading = (text, level) => {
   headings.push({
     level,
     colBreak,
-    text: '<a name="' + escapedText + '" href="#' + escapedText + '">' +
+    text: '<a name="' + escapedText +
+          '" href="#' + escapedText + '">' +
           content + '</a>'
   });
 
@@ -56,6 +61,13 @@ markdown.setOptions({
   highlight: (code) => hljs.highlightAuto(code).value
 });
 
+/**
+ * parsing headings to ul > li tree
+ *
+ * @param headings {Array}
+ * @param n {Number} the largest level of headings want to keep
+ * @return {String} html string of ul > li tree
+ */
 function genToc(headings, n) {
   n = n || 3;
   let pre = 1;
@@ -103,27 +115,27 @@ function genToc(headings, n) {
   return out;
 }
 
-function parsePoints(data, opt, start) {
-
-  let open = opt.open;
-  let close = opt.close;
-  let openPoint = null, closePoint = null;
-
-  let cap = null;
-
-  cap = open.exec(data.substring(start));
-  if (cap) {
-    openPoint = cap.index;
-
-    cap = close.exec(data.substring(cap.index + cap[0].length));
-    if (cap) {
-      closePoint = cap.index + cap[0].length;
-      console.log(cap);
-      return [openPoint, closePoint];
-    }
-  }
-  return null;
-}
+// function parsePoints(data, opt, start) {
+//
+//   let open = opt.open;
+//   let close = opt.close;
+//   let openPoint = null, closePoint = null;
+//
+//   let cap = null;
+//
+//   cap = open.exec(data.substring(start));
+//   if (cap) {
+//     openPoint = cap.index;
+//
+//     cap = close.exec(data.substring(cap.index + cap[0].length));
+//     if (cap) {
+//       closePoint = cap.index + cap[0].length;
+//       console.log(cap);
+//       return [openPoint, closePoint];
+//     }
+//   }
+//   return null;
+// }
 
 function parse2(data, pat) {
   let cap;
@@ -135,6 +147,9 @@ function parse2(data, pat) {
   return ret;
 }
 
+/**
+ * Parse file to `description` array and `code block` array
+ */
 function parseFile(file) {
   let cont = fs.readFileSync(file, 'utf-8');
   //console.log(cont);
@@ -164,34 +179,15 @@ function parseFile(file) {
     descArr,
     codeArr
   };
-
-/*
-  let pointPair;
-  let opt = {
-    open: OPEN,
-    close: CLOSE
-  };
-  let start = 0;
-  let ret = [];
-  while(pointPair = parsePoints(cont, opt, start)) {
-    ret.push(pointPair[0]);
-    ret.push(pointPair[1]);
-    // console.log(pointPair);
-    start = pointPair[1];
-  }
-
-
-  return ret;
-*/
 }
 
-// var ret = parseFile('test.txt');
-// var ret = parseFile('sass/test.scss');
-
+/**
+ * construct the data needed before rendering template
+ */
 function populateData() {
   let data = [];
-  let parsedBefore = parseFile('sass/content.scss');
-  let parsedAfter = parseFile('css/content.css');
+  let parsedBefore = parseFile(sassIn);
+  let parsedAfter = parseFile(sassOut);
 
   for(let i = 0; i < parsedBefore.descArr.length; i++) {
     let one = {};
@@ -220,16 +216,7 @@ function populateData() {
   };
 }
 
-// hardcode
-var content = {
-  description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat perferendis, laborum non cupiditate vero dolores impedit labore, voluptate atque iusto asperiores, vel necessitatibus rerum natus earum mollitia. Accusantium libero, ad.</p>'
-  ,
-  left: '<p>hello</p>',
-  right: '<p>world<p>'
-};
-
 const data = populateData();
-
 
 var ret = ejs.render(template, data);
 fs.writeFileSync('src/index.html', ret);
