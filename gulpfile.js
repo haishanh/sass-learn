@@ -14,7 +14,7 @@ gulp.task('sass', () => {
 });
 
 gulp.task('res', () => {
-  return gulp.src('./src/**/*.js')
+  return gulp.src(['./src/**/*.js', './src/CNAME'])
     .pipe(gulp.dest('./dist'));
 });
 
