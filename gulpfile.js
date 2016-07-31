@@ -1,4 +1,5 @@
 const gulp = require('gulp'),
+      autoprefixer = require('gulp-autoprefixer'),
       sass = require('gulp-sass');
 
 function sassIt(src, dest) {
@@ -19,11 +20,17 @@ gulp.task('res', () => {
 });
 
 gulp.task('sitesass', () => {
-  sassIt('./src/**/*.scss', './dist');
+  gulp.src('./src/**/*.scss')
+    .pipe(sass({
+      outputStyle: 'compressed'
+    })).on('error', sass.logError)
+    .pipe(autoprefixer())
+    .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('sass:watch', () => {
   gulp.watch('./sass/**/*.scss', ['sass'])
+  gulp.watch('./src/**/*.scss', ['sitesass']);
 });
 
 gulp.task('dist', ['sitesass', 'res']);

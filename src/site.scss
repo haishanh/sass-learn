@@ -2,7 +2,7 @@
 @import "hljs-gist";
 
 $font-main: "Roboto", "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB", "Source Han Sans CN", "Source Han Sans SC", "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
-$font-mono: Consolas,"Andale Mono WT","Andale Mono","Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
+$font-mono: Inconsolata, "Ubuntu Mono", Consolas,"Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
 // $red: #e91363;
 $red: #CF649A;
 $green: #009688;
@@ -14,19 +14,13 @@ $complementary: #78AB26;
   box-sizing: border-box;
 }
 
-.cf:before,
-.cf:after {
-  content: " ";
-  display: table;
-}
-
-.cf:after {
-  clear: both;
-}
-
 body {
   font-family: $font-main;
   background: #efede4;
+}
+
+code {
+  font-family: $font-mono;
 }
 
 .description {
@@ -40,13 +34,14 @@ body {
     color: $red;
   }
   pre {
-    border: 1px solid $complementary;
-    border-radius: 5px;
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
     padding: 15px 15px;
   }
 }
 
 .compare {
+  display: flex;
   border-top: 1px solid #dadada;
   border-bottom: 1px solid #dadada;
   background: linear-gradient(90deg, #fff 50%, #f3f3f3 50%);
@@ -56,8 +51,6 @@ body {
   width: 50%;
   padding: 1em 1.5em;
   position: relative;
-  //float: left;
-  display: inline-block;
   vertical-align: top;
 }
 
@@ -73,8 +66,7 @@ body {
 p {
   line-height: 1.6em;
   img {
-    width: 120%;
-    margin: 0 -10%;
+    max-width: 100%;
   }
 }
 
@@ -133,7 +125,7 @@ p, li {
     a {
     text-decoration: none;
     color: $green;
-    transition: all 0.4s ease-in;
+    transition: all 0.2s ease-in;
     &:hover {
       color: #fff;
       background: $green;
@@ -152,6 +144,8 @@ p, li {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: space-around;
     width: 100%;
     height: 700px;
     overflow-x: auto;
@@ -162,6 +156,7 @@ p, li {
   .top-level {
     margin-top: 5px;
     margin-bottom: 5px;
+    max-width: 220px;
   }
   ul {
     list-style: none;
