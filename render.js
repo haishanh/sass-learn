@@ -1,6 +1,7 @@
 'use strict';
 
 const ejs = require('ejs');
+const pug = require('pug');
 const fs = require('fs');
 const markdown = require('marked');
 const hljs = require('highlight.js');
@@ -9,8 +10,7 @@ const _ = require('lodash');
 const sassIn = 'sass/content.scss';
 const sassOut = 'css/content.css';
 const htmlOut = 'dist/index.html';
-const templateFile = 'src/template.html';
-const template = fs.readFileSync(templateFile, 'utf-8');
+const templateFile = 'src/index.pug';
 const OPEN = /\/\*!/g;
 const CLOSE = /!\*\//g;
 const descPat = /\/\*!\s*\n([\s\S]*?)!\*\//;
@@ -219,5 +219,7 @@ function populateData() {
 
 const data = populateData();
 
-var ret = ejs.render(template, data);
+data.pretty = true;
+
+const ret = pug.renderFile(templateFile, data);
 fs.writeFileSync(htmlOut, ret);

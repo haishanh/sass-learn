@@ -1,0 +1,40 @@
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    meta(name="description", content="Learn Sass")
+    meta(name="theme-color", content="#c6538c")
+    title Learn Sass
+    link(rel="stylesheet", type="text/css", href="http://fonts.useso.com/css?family=Roboto")
+    link(rel="stylesheet", href="site.css")
+  body
+    header
+      a.home-link(href="#")
+      h1 一起学习
+      .sass-logo
+        include sass-logo.svg
+      .after-logo
+        a(href="https://github.com/haishanh/sass-learn/blob/master/sass/content.scss",
+          target="_blank"
+        ) View on GitHub
+    .toc.cf
+      h2.title Table of Contents
+      .content!= toc
+    a.tocbtn(href="javascript:void(0)") TOC
+    - for(var i = 0; i < contents.length; i++)
+      - var content = contents[i]
+      section.description!= content.description
+      - if (content.left)
+        section.compare
+          .col.left
+            .type scss
+            pre
+              code!= content.left
+          .col.right
+            .type css
+            pre
+              code!= content.right
+    script(src="script.js")
+    footer
+      p Made with #[span.love love] by #[a(href="http://hanhaishan.com") haishanh]
