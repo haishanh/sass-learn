@@ -1,6 +1,5 @@
 'use strict';
 
-const ejs = require('ejs');
 const pug = require('pug');
 const fs = require('fs');
 const markdown = require('marked');
