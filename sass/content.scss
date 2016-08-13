@@ -78,7 +78,7 @@ Sass 允许 CSS 规则进行嵌套。这可能是 Sass 最常用的功能了。
 /*!
 在 selector 内部，可以使用 `&` 符号来引用 父级 selector。比如：
 !*/
-a {
+.awesome-link {
   color: blue;
   &:hover {
     color: red;
