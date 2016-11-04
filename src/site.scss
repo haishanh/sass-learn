@@ -1,8 +1,9 @@
 @import "normalize";
+@import "fonts";
 @import "hljs-gist";
 
 $font-main: "Roboto", "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB", "Source Han Sans CN", "Source Han Sans SC", "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
-$font-mono: Inconsolata, "Ubuntu Mono", Consolas,"Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
+$font-mono: IosevkaWEB, Inconsolata, "Ubuntu Mono", Consolas,"Lucida Console","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
 // $red: #e91363;
 $red: #CF649A;
 $green: #009688;
@@ -76,6 +77,7 @@ li {
 
 pre > code {
   font-family: $font-mono;
+  font-weight: 300;
 }
 
 p > code,

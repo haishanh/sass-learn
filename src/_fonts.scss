@@ -1,0 +1,88 @@
+$url: "http://obna4cgzx.bkt.clouddn.com/fonts";
+
+
+@mixin remote-fonts($url, $weight, $style, $name) {
+  @font-face {
+    font-family: IosevkaWEB;
+    @if $weight != none {
+      font-weight: $weight;
+    }
+    @if $style != none {
+      font-style: $style;
+    }
+    src: url("#{$url}/iosevka-#{$name}.woff2") format('woff2'), url("#{$url}/iosevka-#{$name}.woff") format('woff'), url("#{$url}/iosevka-#{$name}.ttf") format('truetype');
+  }
+}
+
+@mixin remote-fonts-slab($url, $weight, $style, $name) {
+  @font-face {
+    font-family: IosevkaSlabWEB;
+    @if $style != none {
+      font-weight: $weight;
+    }
+    @if $style != none {
+      font-style: $style;
+    }
+    src: url("#{$url}/iosevka-slab-#{$name}.woff2") format('woff2'), url("#{$url}/iosevka-slab-#{$name}.woff") format('woff'), url("#{$url}/iosevka-slab-#{$name}.ttf") format('truetype');
+  }
+}
+
+// IosevkaWEB
+
+@include remote-fonts($url, 100, none, thin);
+@include remote-fonts($url, 100, italic, thinitalic);
+@include remote-fonts($url, 100, oblique, thinoblique);
+
+@include remote-fonts($url, 200, none, extralight);
+@include remote-fonts($url, 200, italic, extralightitalic);
+@include remote-fonts($url, 200, oblique, extralightoblique);
+
+@include remote-fonts($url, 300, none, light);
+@include remote-fonts($url, 300, italic, lightitalic);
+@include remote-fonts($url, 300, oblique, lightoblique);
+
+@include remote-fonts($url, none, none, regular);
+@include remote-fonts($url, none, italic, italic);
+@include remote-fonts($url, none, oblique, oblique);
+
+@include remote-fonts($url, 500, none, medium);
+@include remote-fonts($url, 500, italic, mediumitalic);
+@include remote-fonts($url, 500, oblique, mediumoblique);
+
+@include remote-fonts($url, 700, none, bold);
+@include remote-fonts($url, 700, italic, bolditalic);
+@include remote-fonts($url, 700, oblique, boldoblique);
+
+@include remote-fonts($url, 900, none, heavy);
+@include remote-fonts($url, 900, italic, heavyitalic);
+@include remote-fonts($url, 900, oblique, heavyoblique);
+
+// IosevkaSlabWEB
+
+@include remote-fonts-slab($url, 100, none, thin);
+@include remote-fonts-slab($url, 100, italic, thinitalic);
+@include remote-fonts-slab($url, 100, oblique, thinoblique);
+
+@include remote-fonts-slab($url, 200, none, extralight);
+@include remote-fonts-slab($url, 200, italic, extralightitalic);
+@include remote-fonts-slab($url, 200, oblique, extralightoblique);
+
+@include remote-fonts-slab($url, 300, none, light);
+@include remote-fonts-slab($url, 300, italic, lightitalic);
+@include remote-fonts-slab($url, 300, oblique, lightoblique);
+
+@include remote-fonts-slab($url, none, none, regular);
+@include remote-fonts-slab($url, none, italic, italic);
+@include remote-fonts-slab($url, none, oblique, oblique);
+
+@include remote-fonts-slab($url, 500, none, medium);
+@include remote-fonts-slab($url, 500, italic, mediumitalic);
+@include remote-fonts-slab($url, 500, oblique, mediumoblique);
+
+@include remote-fonts-slab($url, 700, none, bold);
+@include remote-fonts-slab($url, 700, italic, bolditalic);
+@include remote-fonts-slab($url, 700, oblique, boldoblique);
+
+@include remote-fonts-slab($url, 900, none, heavy);
+@include remote-fonts-slab($url, 900, italic, heavyitalic);
+@include remote-fonts-slab($url, 900, oblique, heavyoblique);
